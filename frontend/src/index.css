@@ -1,0 +1,88 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Custom styles */
+body {
+  @apply bg-gray-50 text-gray-900 antialiased;
+}
+
+/* Card sleeve effect */
+.card-sleeve {
+  @apply relative rounded-lg overflow-hidden;
+  background: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.4) 0%,
+    rgba(255, 255, 255, 0.1) 50%,
+    rgba(255, 255, 255, 0.2) 100%
+  );
+}
+
+.card-sleeve::before {
+  content: "";
+  @apply absolute inset-0 rounded-lg;
+  background: linear-gradient(
+    to bottom,
+    rgba(255, 255, 255, 0.3) 0%,
+    transparent 30%
+  );
+  pointer-events: none;
+}
+
+/* Binder page background */
+.binder-page {
+  background-color: #f5f0e6;
+  background-image: linear-gradient(
+      90deg,
+      transparent 79px,
+      #d4c4a8 79px,
+      #d4c4a8 81px,
+      transparent 81px
+    ),
+    linear-gradient(#eee8dc 0.1em, transparent 0.1em);
+  background-size: 100% 1.2em;
+}
+
+/* Card hover effect */
+.card-hover {
+  @apply transition-all duration-200 ease-out;
+}
+
+.card-hover:hover {
+  @apply -translate-y-1 shadow-lg;
+}
+
+/* Unavailable card overlay */
+.card-unavailable {
+  @apply relative;
+}
+
+.card-unavailable::after {
+  content: "SOLD";
+  @apply absolute inset-0 flex items-center justify-center;
+  @apply bg-black/60 text-white font-bold text-lg;
+  @apply rounded-lg;
+}
+
+/* Loading skeleton */
+.skeleton {
+  @apply animate-pulse bg-gray-200 rounded;
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  @apply bg-gray-100 rounded;
+}
+
+::-webkit-scrollbar-thumb {
+  @apply bg-gray-300 rounded;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  @apply bg-gray-400;
+}

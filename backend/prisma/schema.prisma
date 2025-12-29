@@ -1,0 +1,122 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id           String   @id @default(uuid())
+  email        String   @unique
+  passwordHash String   @map("password_hash")
+  displayName  String   @map("display_name")
+  avatarUrl    String?  @map("avatar_url")
+  createdAt    DateTime @default(now()) @map("created_at")
+  updatedAt    DateTime @updatedAt @map("updated_at")
+
+  // Relations
+  binders              Binder[]
+  sentMessages         Message[]      @relation("SentMessages")
+  buyerConversations   Conversation[] @relation("BuyerConversations")
+  sellerConversations  Conversation[] @relation("SellerConversations")
+
+  @@map("users")
+}
+
+model Card {
+  id              String   @id @default(uuid())
+  scryfallId      String   @unique @map("scryfall_id")
+  name            String
+  setCode         String   @map("set_code")
+  setName         String   @map("set_name")
+  imageUrl        String   @map("image_url")
+  manaCost        String?  @map("mana_cost")
+  typeLine        String?  @map("type_line")
+  rarity          String?
+  priceEur        Float?   @map("price_eur")
+  priceUsd        Float?   @map("price_usd")
+  priceUpdatedAt  DateTime? @map("price_updated_at")
+  createdAt       DateTime @default(now()) @map("created_at")
+
+  // Relations
+  binderCards BinderCard[]
+
+  @@map("cards")
+}
+
+model Binder {
+  id          String   @id @default(uuid())
+  userId      String   @map("user_id")
+  name        String
+  description String?
+  isPublic    Boolean  @default(true) @map("is_public")
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @updatedAt @map("updated_at")
+
+  // Relations
+  user  User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  cards BinderCard[]
+
+  @@map("binders")
+}
+
+model BinderCard {
+  id            String   @id @default(uuid())
+  binderId      String   @map("binder_id")
+  cardId        String   @map("card_id")
+  quantity      Int      @default(1)
+  condition     String   @default("NEAR_MINT")
+  askingPrice   Float?   @map("asking_price")
+  notes         String?
+  isAvailable   Boolean  @default(true) @map("is_available")
+  pageNumber    Int      @default(1) @map("page_number")
+  slotPosition  Int      @default(0) @map("slot_position")
+  createdAt     DateTime @default(now()) @map("created_at")
+  updatedAt     DateTime @updatedAt @map("updated_at")
+
+  // Relations
+  binder        Binder         @relation(fields: [binderId], references: [id], onDelete: Cascade)
+  card          Card           @relation(fields: [cardId], references: [id], onDelete: Cascade)
+  conversations Conversation[]
+
+  @@unique([binderId, pageNumber, slotPosition])
+  @@map("binder_cards")
+}
+
+model Conversation {
+  id           String   @id @default(uuid())
+  buyerId      String   @map("buyer_id")
+  sellerId     String   @map("seller_id")
+  binderCardId String?  @map("binder_card_id")
+  createdAt    DateTime @default(now()) @map("created_at")
+  updatedAt    DateTime @updatedAt @map("updated_at")
+
+  // Relations
+  buyer      User        @relation("BuyerConversations", fields: [buyerId], references: [id], onDelete: Cascade)
+  seller     User        @relation("SellerConversations", fields: [sellerId], references: [id], onDelete: Cascade)
+  binderCard BinderCard? @relation(fields: [binderCardId], references: [id], onDelete: SetNull)
+  messages   Message[]
+
+  @@unique([buyerId, sellerId, binderCardId])
+  @@map("conversations")
+}
+
+model Message {
+  id             String   @id @default(uuid())
+  conversationId String   @map("conversation_id")
+  senderId       String   @map("sender_id")
+  content        String
+  isRead         Boolean  @default(false) @map("is_read")
+  createdAt      DateTime @default(now()) @map("created_at")
+
+  // Relations
+  conversation Conversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+  sender       User         @relation("SentMessages", fields: [senderId], references: [id], onDelete: Cascade)
+
+  @@map("messages")
+}
