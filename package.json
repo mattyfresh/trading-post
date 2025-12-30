@@ -5,6 +5,7 @@
   "private": true,
   "packageManager": "pnpm@9.15.1",
   "scripts": {
+    "setup": "./scripts/setup.sh",
     "dev": "concurrently \"pnpm run dev:backend\" \"pnpm run dev:frontend\"",
     "dev:frontend": "pnpm --filter frontend dev",
     "dev:backend": "pnpm --filter backend dev",
