@@ -30,7 +30,7 @@ A web application for Magic: The Gathering players in Stockholm to list cards fo
 - Node.js + Express
 - TypeScript
 - Prisma ORM
-- PostgreSQL
+- SQLite (local development) / PostgreSQL (production)
 - JWT Authentication
 - Zod (validation)
 
@@ -43,10 +43,27 @@ A web application for Magic: The Gathering players in Stockholm to list cards fo
 ### Prerequisites
 
 - Node.js 18+
-- PostgreSQL 14+
-- pnpm 9+ (`npm install -g pnpm`)
+- pnpm (will be installed automatically if missing)
 
-### Installation
+### Quick Start
+
+The easiest way to get started is to run the setup script:
+
+```bash
+./scripts/start-trading-post.sh
+```
+
+This script will:
+1. Check for Node.js 18+
+2. Install pnpm if not present
+3. Install all dependencies
+4. Create the environment configuration
+5. Set up the SQLite database with migrations
+6. Optionally start the development servers
+
+### Manual Installation
+
+If you prefer to set things up manually:
 
 1. **Clone the repository**
 
@@ -61,37 +78,20 @@ A web application for Magic: The Gathering players in Stockholm to list cards fo
    pnpm install
    ```
 
-3. **Set up the database**
-
-   Create a PostgreSQL database:
-
-   ```bash
-   createdb trading_post
-   ```
-
-4. **Configure environment variables**
-
-   Copy the example env file and update it:
+3. **Configure environment variables**
 
    ```bash
    cp backend/.env.example backend/.env
    ```
 
-   Update `backend/.env` with your database URL:
-
-   ```
-   DATABASE_URL="postgresql://postgres:password@localhost:5432/trading_post?schema=public"
-   JWT_SECRET="your-super-secret-jwt-key-change-in-production"
-   ```
-
-5. **Generate Prisma client and run migrations**
+4. **Generate Prisma client and run migrations**
 
    ```bash
    pnpm db:generate
-   pnpm db:migrate
+   cd backend && npx prisma migrate dev --name init && cd ..
    ```
 
-6. **Start the development servers**
+5. **Start the development servers**
 
    ```bash
    pnpm dev
@@ -101,6 +101,8 @@ A web application for Magic: The Gathering players in Stockholm to list cards fo
 
    - Frontend: http://localhost:5173
    - Backend: http://localhost:3001
+
+> **Note:** The project uses SQLite for local development. No external database setup is required.
 
 ## Project Structure
 
