@@ -55,14 +55,17 @@ export default function BinderPage({
               )}
 
               {/* Hover info */}
-              <div className="absolute inset-x-0 bottom-0 p-2 bg-gradient-to-t from-black/80 to-transparent opacity-0 group-hover:opacity-100 transition-opacity rounded-b-md">
-                <p className="text-white text-xs font-medium truncate">
-                  {binderCard.card.name}
-                </p>
-                <div className="flex justify-between items-center mt-1">
-                  <span className="text-white/80 text-xs">
-                    {CONDITION_LABELS[binderCard.condition]}
-                  </span>
+                <div className="absolute inset-x-0 bottom-0 p-2 bg-gradient-to-t from-black to-black/40 opacity-0 group-hover:opacity-100 transition-opacity rounded-b-md">
+                  <p className="text-white text-xs font-medium truncate">
+                    {binderCard.card.name}
+                  </p>
+                  <p className="text-white/60 text-xs truncate">
+                    {binderCard.card.setName}
+                  </p>
+                  <div className="flex justify-between items-center mt-1">
+                    <span className="text-white/80 text-xs">
+                      {CONDITION_LABELS[binderCard.condition]}
+                    </span>
                   {binderCard.askingPrice && (
                     <span className="text-white font-semibold text-xs">
                       €{binderCard.askingPrice.toFixed(2)}
