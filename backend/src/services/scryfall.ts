@@ -123,6 +123,33 @@ export async function autocompleteCardName(query: string): Promise<string[]> {
   return result.data || [];
 }
 
+// Get all printings of a card by exact name (across all sets)
+export async function getCardPrintings(
+  name: string
+): Promise<ScryfallCard[]> {
+  await delay(100); // Rate limiting
+
+  // Use exact name search with unique:prints to get one result per printing
+  const params = new URLSearchParams({
+    q: `!"${name}"`,
+    unique: "prints",
+    order: "released",
+    dir: "asc",
+  });
+
+  const response = await fetch(`${SCRYFALL_BASE_URL}/cards/search?${params}`);
+
+  if (!response.ok) {
+    if (response.status === 404) {
+      return [];
+    }
+    throw new Error(`Scryfall API error: ${response.status}`);
+  }
+
+  const result: ScryfallSearchResult = await response.json();
+  return result.data;
+}
+
 // Get random card (useful for featured cards)
 export async function getRandomCard(): Promise<ScryfallCard> {
   await delay(100);

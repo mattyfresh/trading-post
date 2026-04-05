@@ -3,6 +3,7 @@ import { prisma } from "../index.js";
 import {
   searchCards,
   getCardById,
+  getCardPrintings,
   autocompleteCardName,
   transformScryfallCard,
 } from "../services/scryfall.js";
@@ -64,6 +65,41 @@ router.get("/autocomplete", async (req: Request, res: Response) => {
   } catch (error) {
     console.error("Autocomplete error:", error);
     res.status(500).json({ error: "Failed to get suggestions" });
+  }
+});
+
+// GET /api/cards/printings?name=cardname - Get all printings of a card by exact name
+router.get("/printings", async (req: Request, res: Response) => {
+  try {
+    const { name } = req.query;
+
+    if (!name || typeof name !== "string") {
+      res.status(400).json({ error: "Card name is required" });
+      return;
+    }
+
+    const scryfallCards = await getCardPrintings(name);
+
+    const printings = scryfallCards.map(card => ({
+      scryfallId: card.id,
+      name: card.name,
+      setCode: card.set,
+      setName: card.set_name,
+      imageUrl:
+        card.image_uris?.normal ||
+        card.card_faces?.[0]?.image_uris?.normal ||
+        "",
+      manaCost: card.mana_cost,
+      typeLine: card.type_line,
+      rarity: card.rarity,
+      priceEur: card.prices.eur,
+      priceUsd: card.prices.usd,
+    }));
+
+    res.json({ printings });
+  } catch (error) {
+    console.error("Get printings error:", error);
+    res.status(500).json({ error: "Failed to get card printings" });
   }
 });
 
