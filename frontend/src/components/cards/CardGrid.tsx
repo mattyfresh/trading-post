@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import type { BinderCard } from "../../types";
 import { CONDITION_LABELS } from "../../types";
 
@@ -13,6 +13,16 @@ export default function CardGrid({
   showSeller = true,
   onCardClick,
 }: CardGridProps) {
+  const navigate = useNavigate();
+
+  const handleCardClick = (binderCard: BinderCard) => {
+    if (onCardClick) {
+      onCardClick(binderCard);
+    } else if (binderCard.binderId) {
+      navigate(`/binder/${binderCard.binderId}?highlight=${binderCard.id}`);
+    }
+  };
+
   return (
     <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4">
       {cards.map(binderCard => (
@@ -25,7 +35,7 @@ export default function CardGrid({
           {/* Card Image */}
           <div
             className="aspect-card rounded-lg overflow-hidden bg-gray-200 card-hover cursor-pointer card-sleeve"
-            onClick={() => onCardClick?.(binderCard)}
+            onClick={() => handleCardClick(binderCard)}
           >
             <img
               src={binderCard.card.imageUrl}

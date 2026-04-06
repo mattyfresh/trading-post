@@ -5,6 +5,7 @@ interface BinderPageProps {
   cards: BinderCard[];
   pageNumber: number;
   isOwner?: boolean;
+  highlightedCardId?: string | null;
   onCardClick?: (card: BinderCard) => void;
   onToggleAvailability?: (card: BinderCard) => void;
 }
@@ -13,6 +14,7 @@ export default function BinderPage({
   cards,
   pageNumber,
   isOwner = false,
+  highlightedCardId,
   onCardClick,
   onToggleAvailability,
 }: BinderPageProps) {
@@ -28,7 +30,11 @@ export default function BinderPage({
         {cards.map(binderCard => (
           <div
             key={binderCard.id}
-            className="aspect-card bg-white/60 rounded-lg border border-slate-300 flex items-center justify-center overflow-hidden"
+            className={`aspect-card bg-white/60 rounded-lg border flex items-center justify-center overflow-hidden transition-all duration-300 ${
+              highlightedCardId === binderCard.id
+                ? "border-primary-500 ring-4 ring-primary-400/60 scale-105"
+                : "border-slate-300"
+            }`}
           >
             <div
               className={`relative w-full h-full group ${

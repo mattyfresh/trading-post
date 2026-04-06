@@ -1,5 +1,5 @@
-import { useState } from "react";
-import { useParams, Link } from "react-router-dom";
+import { useState, useEffect } from "react";
+import { useParams, useSearchParams, Link } from "react-router-dom";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { bindersApi } from "../services/api";
 import { ChevronLeft, ChevronRight, Plus, MessageCircle } from "lucide-react";
@@ -10,16 +10,32 @@ import type { BinderCard } from "../types";
 
 export default function BinderView() {
   const { id } = useParams<{ id: string }>();
+  const [searchParams] = useSearchParams();
+  const highlightId = searchParams.get("highlight");
   const queryClient = useQueryClient();
   const [currentPage, setCurrentPage] = useState(1);
   const [showAddCard, setShowAddCard] = useState(false);
   const [clickedCardId, setClickedCardId] = useState<string | null>(null);
+  const [highlightedCardId, setHighlightedCardId] = useState<string | null>(null);
 
   const { data, isLoading } = useQuery({
     queryKey: ["binder", id],
     queryFn: () => bindersApi.getBinder(id!),
     enabled: !!id,
   });
+
+  const cards: BinderCard[] = data?.binder?.cards || [];
+
+  // Jump to the page containing the highlighted card and flash it
+  useEffect(() => {
+    if (!highlightId || cards.length === 0) return;
+    const target = cards.find((c: BinderCard) => c.id === highlightId);
+    if (!target) return;
+    setCurrentPage(target.pageNumber);
+    setHighlightedCardId(highlightId);
+    const timer = setTimeout(() => setHighlightedCardId(null), 2000);
+    return () => clearTimeout(timer);
+  }, [highlightId, cards.length]);
 
   const toggleAvailabilityMutation = useMutation({
     mutationFn: ({ cardId }: { cardId: string }) =>
@@ -74,7 +90,6 @@ export default function BinderView() {
   }
 
   const { binder, isOwner } = data;
-  const cards = binder.cards || [];
   const clickedCard = clickedCardId
     ? cards.find((c: BinderCard) => c.id === clickedCardId) ?? null
     : null;
@@ -133,6 +148,7 @@ export default function BinderView() {
           cards={pageCards}
           pageNumber={currentPage}
           isOwner={isOwner}
+          highlightedCardId={highlightedCardId}
           onCardClick={card => setClickedCardId(card.id)}
           onToggleAvailability={card =>
             toggleAvailabilityMutation.mutate({ cardId: card.id })

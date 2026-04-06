@@ -27,7 +27,9 @@ export default function AddCardModal({
   const [isSearching, setIsSearching] = useState(false);
   const [printings, setPrintings] = useState<ScryfallCard[]>([]);
   const [isFetchingPrintings, setIsFetchingPrintings] = useState(false);
-  const [selectedPrinting, setSelectedPrinting] = useState<ScryfallCard | null>(null);
+  const [selectedPrinting, setSelectedPrinting] = useState<ScryfallCard | null>(
+    null,
+  );
   const [askingPrice, setAskingPrice] = useState("");
   const [justAdded, setJustAdded] = useState(false);
 
@@ -149,7 +151,8 @@ export default function AddCardModal({
                 scryfallId: activePrinting.scryfallId,
                 quantity: parseInt(formData.get("quantity") as string) || 1,
                 condition: (formData.get("condition") as string) || "NEAR_MINT",
-                askingPrice: askingPrice !== "" ? parseFloat(askingPrice) : null,
+                askingPrice:
+                  askingPrice !== "" ? parseFloat(askingPrice) : null,
                 notes: (formData.get("notes") as string) || "",
               });
               resetToSearch(true);
@@ -181,7 +184,7 @@ export default function AddCardModal({
                       value={activePrinting.scryfallId}
                       onChange={e => {
                         const printing = printings.find(
-                          p => p.scryfallId === e.target.value
+                          p => p.scryfallId === e.target.value,
                         );
                         if (printing) {
                           setSelectedPrinting(printing);
@@ -189,11 +192,13 @@ export default function AddCardModal({
                         }
                       }}
                     >
-                      {(printings.length > 0 ? printings : [selectedCard]).map(p => (
-                        <option key={p.scryfallId} value={p.scryfallId}>
-                          {p.setName} ({p.setCode.toUpperCase()})
-                        </option>
-                      ))}
+                      {(printings.length > 0 ? printings : [selectedCard]).map(
+                        p => (
+                          <option key={p.scryfallId} value={p.scryfallId}>
+                            {p.setName} ({p.setCode.toUpperCase()})
+                          </option>
+                        ),
+                      )}
                     </select>
                   )}
                 </div>
@@ -263,7 +268,9 @@ export default function AddCardModal({
             <div className="flex justify-end space-x-3">
               <button
                 type="button"
-                onClick={resetToSearch}
+                onClick={() => {
+                  resetToSearch(false);
+                }}
                 className="px-4 py-2 text-gray-600"
               >
                 Back
@@ -281,10 +288,7 @@ export default function AddCardModal({
 
         {!selectedCard && (
           <div className="flex justify-end">
-            <button
-              onClick={onClose}
-              className="px-4 py-2 text-gray-600"
-            >
+            <button onClick={onClose} className="px-4 py-2 text-gray-600">
               Cancel
             </button>
           </div>
