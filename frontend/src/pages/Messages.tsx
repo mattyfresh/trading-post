@@ -33,7 +33,13 @@ export default function Messages() {
 
   const { data: activeConversation } = useQuery({
     queryKey: ["conversation", selectedConversation],
-    queryFn: () => conversationsApi.getConversation(selectedConversation!),
+    queryFn: async () => {
+      const conv = await conversationsApi.getConversation(selectedConversation!);
+      // The GET endpoint marks messages as read server-side, so refresh the
+      // conversation list to clear the unread badge.
+      queryClient.invalidateQueries({ queryKey: ["conversations"] });
+      return conv;
+    },
     enabled: !!selectedConversation,
   });
 
@@ -96,10 +102,15 @@ export default function Messages() {
     }
   }, [sellerParam, conversations]);
 
-  // Scroll to bottom when messages change
+  // Instantly jump to bottom when switching conversations; smooth scroll for new messages
+  const prevConversationIdRef = useRef<string | null>(null);
   useEffect(() => {
-    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
-  }, [activeConversation?.messages]);
+    const isNewConversation = selectedConversation !== prevConversationIdRef.current;
+    prevConversationIdRef.current = selectedConversation;
+    messagesEndRef.current?.scrollIntoView({
+      behavior: isNewConversation ? "instant" : "smooth",
+    });
+  }, [activeConversation?.messages, selectedConversation]);
 
   // Listen for real-time messages via socket
   useEffect(() => {
