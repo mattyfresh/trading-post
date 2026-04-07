@@ -29,7 +29,6 @@ export default function Messages() {
   const { data: conversations, isLoading } = useQuery({
     queryKey: ["conversations"],
     queryFn: conversationsApi.getConversations,
-    refetchInterval: 3000,
   });
 
   const { data: activeConversation } = useQuery({
@@ -64,9 +63,9 @@ export default function Messages() {
       conversationId: string;
       content: string;
     }) => conversationsApi.sendMessage(conversationId, content),
-    onSuccess: () => {
+    onSuccess: (_, { conversationId }) => {
       queryClient.invalidateQueries({
-        queryKey: ["conversation", selectedConversation],
+        queryKey: ["conversation", conversationId],
       });
       queryClient.invalidateQueries({ queryKey: ["conversations"] });
       setNewMessage("");
@@ -104,9 +103,16 @@ export default function Messages() {
 
   // Listen for real-time messages via socket
   useEffect(() => {
-    const handler = ({ conversationId }: { conversationId: string; message: Message }) => {
+    const handler = ({
+      conversationId,
+    }: {
+      conversationId: string;
+      message: Message;
+    }) => {
       // Refresh the active thread if it's the one receiving a message
-      queryClient.invalidateQueries({ queryKey: ["conversation", conversationId] });
+      queryClient.invalidateQueries({
+        queryKey: ["conversation", conversationId],
+      });
       // Always refresh the conversation list so unread badges / previews update
       queryClient.invalidateQueries({ queryKey: ["conversations"] });
     };
@@ -279,7 +285,10 @@ export default function Messages() {
                         <p
                           className={`text-xs mt-1 ${message.senderId === user?.id ? "text-primary-200" : "text-gray-500"}`}
                         >
-                          {new Date(message.createdAt).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}
+                          {new Date(message.createdAt).toLocaleTimeString([], {
+                            hour: "2-digit",
+                            minute: "2-digit",
+                          })}
                         </p>
                       </div>
                     </div>
