@@ -2,6 +2,7 @@ import { create } from "zustand";
 import { persist } from "zustand/middleware";
 import type { User } from "../types";
 import { authApi } from "../services/api";
+import { socket } from "../services/socket";
 
 interface AuthState {
   user: User | null;
@@ -45,6 +46,8 @@ export const useAuthStore = create<AuthState>()(
         const { user, token } = await authApi.login({ email, password });
         get().setToken(token);
         set({ user, isAuthenticated: true });
+        socket.auth = { token };
+        socket.connect();
       },
 
       register: async (email, password, displayName) => {
@@ -55,9 +58,12 @@ export const useAuthStore = create<AuthState>()(
         });
         get().setToken(token);
         set({ user, isAuthenticated: true });
+        socket.auth = { token };
+        socket.connect();
       },
 
       logout: () => {
+        socket.disconnect();
         get().setToken(null);
         set({ user: null, isAuthenticated: false });
       },
@@ -72,6 +78,8 @@ export const useAuthStore = create<AuthState>()(
         try {
           const user = await authApi.getMe();
           set({ user, isAuthenticated: true, isLoading: false, token });
+          socket.auth = { token };
+          socket.connect();
         } catch {
           get().setToken(null);
           set({ user: null, isAuthenticated: false, isLoading: false });

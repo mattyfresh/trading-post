@@ -16,7 +16,9 @@ export default function BinderView() {
   const [currentPage, setCurrentPage] = useState(1);
   const [showAddCard, setShowAddCard] = useState(false);
   const [clickedCardId, setClickedCardId] = useState<string | null>(null);
-  const [highlightedCardId, setHighlightedCardId] = useState<string | null>(null);
+  const [highlightedCardId, setHighlightedCardId] = useState<string | null>(
+    null,
+  );
 
   const { data, isLoading } = useQuery({
     queryKey: ["binder", id],
@@ -91,7 +93,7 @@ export default function BinderView() {
 
   const { binder, isOwner } = data;
   const clickedCard = clickedCardId
-    ? cards.find((c: BinderCard) => c.id === clickedCardId) ?? null
+    ? (cards.find((c: BinderCard) => c.id === clickedCardId) ?? null)
     : null;
 
   // Group cards by page
@@ -194,7 +196,7 @@ export default function BinderView() {
       {showAddCard && (
         <AddCardModal
           isPending={addCardMutation.isPending}
-          onAdd={data => addCardMutation.mutateAsync(data)}
+          onAdd={async data => { await addCardMutation.mutateAsync(data); }}
           onClose={() => setShowAddCard(false)}
         />
       )}

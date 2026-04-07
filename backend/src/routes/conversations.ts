@@ -1,6 +1,6 @@
 import { Router, Response } from "express";
 import { z } from "zod";
-import { prisma } from "../index.js";
+import { prisma, io } from "../index.js";
 import { authenticateToken, AuthRequest } from "../middleware/auth.js";
 
 const router = Router();
@@ -131,11 +131,16 @@ router.post("/", authenticateToken, async (req: AuthRequest, res: Response) => {
     }
 
     // Add the first message
-    await prisma.message.create({
+    const firstMessage = await prisma.message.create({
       data: {
         conversationId: conversation.id,
         senderId: req.userId!,
         content: message,
+      },
+      include: {
+        sender: {
+          select: { id: true, displayName: true, avatarUrl: true },
+        },
       },
     });
 
@@ -144,6 +149,11 @@ router.post("/", authenticateToken, async (req: AuthRequest, res: Response) => {
       where: { id: conversation.id },
       data: { updatedAt: new Date() },
     });
+
+    // Notify both participants in real time
+    const payload = { conversationId: conversation.id, message: firstMessage };
+    io.to(conversation.buyerId).emit("new_message", payload);
+    io.to(conversation.sellerId).emit("new_message", payload);
 
     // Fetch the full conversation
     const fullConversation = await prisma.conversation.findUnique({
@@ -334,6 +344,11 @@ router.post(
         where: { id },
         data: { updatedAt: new Date() },
       });
+
+      // Notify both participants in real time
+      const payload = { conversationId: id, message };
+      io.to(conversation.buyerId).emit("new_message", payload);
+      io.to(conversation.sellerId).emit("new_message", payload);
 
       res.status(201).json({ message });
     } catch (error) {

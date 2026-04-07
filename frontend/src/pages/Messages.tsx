@@ -3,6 +3,7 @@ import { useParams, useSearchParams } from "react-router-dom";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { conversationsApi, usersApi } from "../services/api";
 import { useAuthStore } from "../store/authStore";
+import { socket } from "../services/socket";
 import { Send, MessageCircle } from "lucide-react";
 import type { Conversation, Message } from "../types";
 
@@ -100,6 +101,21 @@ export default function Messages() {
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [activeConversation?.messages]);
+
+  // Listen for real-time messages via socket
+  useEffect(() => {
+    const handler = ({ conversationId }: { conversationId: string; message: Message }) => {
+      // Refresh the active thread if it's the one receiving a message
+      queryClient.invalidateQueries({ queryKey: ["conversation", conversationId] });
+      // Always refresh the conversation list so unread badges / previews update
+      queryClient.invalidateQueries({ queryKey: ["conversations"] });
+    };
+
+    socket.on("new_message", handler);
+    return () => {
+      socket.off("new_message", handler);
+    };
+  }, [queryClient]);
 
   const getOtherUser = (conv: Conversation) =>
     conv.buyerId === user?.id ? conv.seller : conv.buyer;
