@@ -41,6 +41,9 @@ coverage/
 
 # Prisma
 backend/prisma/migrations/
+backend/prisma/dev.db
+
+.kilo/
 
 # Misc
 *.tsbuildinfo

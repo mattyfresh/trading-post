@@ -279,7 +279,7 @@ export default function Messages() {
                         <p
                           className={`text-xs mt-1 ${message.senderId === user?.id ? "text-primary-200" : "text-gray-500"}`}
                         >
-                          {new Date(message.createdAt).toLocaleTimeString()}
+                          {new Date(message.createdAt).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}
                         </p>
                       </div>
                     </div>
