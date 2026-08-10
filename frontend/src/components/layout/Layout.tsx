@@ -1,6 +1,14 @@
 import { Outlet, Link, useNavigate } from "react-router-dom";
 import { useAuthStore } from "../../store/authStore";
-import { Search, MessageCircle, User, LogOut, Menu, X } from "lucide-react";
+import {
+  Search,
+  MessageCircle,
+  BookUser,
+  User,
+  LogOut,
+  Menu,
+  X,
+} from "lucide-react";
 import { useState } from "react";
 
 export default function Layout() {
@@ -36,16 +44,17 @@ export default function Layout() {
                 className="flex items-center space-x-1 text-gray-600 hover:text-primary-600 transition-colors"
               >
                 <Search className="w-5 h-5" />
-                <span>Search Cards</span>
+                <span>Search cards or sellers</span>
               </Link>
 
               {isAuthenticated ? (
                 <>
                   <Link
                     to="/dashboard"
-                    className="text-gray-600 hover:text-primary-600 transition-colors"
+                    className="flex items-center space-x-1 text-gray-600 hover:text-primary-600 transition-colors"
                   >
-                    My Binders
+                    <BookUser className="w-5 h-5" />
+                    <span>My binders</span>
                   </Link>
                   <Link
                     to="/messages"
@@ -57,7 +66,7 @@ export default function Layout() {
                   <div className="flex items-center space-x-4">
                     <Link
                       to="/dashboard"
-                      className="flex items-center space-x-2 text-gray-600 hover:text-primary-600"
+                      className="flex items-center space-x-2 text-gray-600 hover:text-primary-600 transition-colors"
                     >
                       <div className="w-8 h-8 bg-gray-200 rounded-full flex items-center justify-center">
                         {user?.avatarUrl ? (
@@ -123,7 +132,7 @@ export default function Layout() {
                 onClick={() => setMobileMenuOpen(false)}
               >
                 <Search className="w-5 h-5" />
-                <span>Search Cards</span>
+                <span>Search cards or sellers</span>
               </Link>
 
               {isAuthenticated ? (
@@ -133,7 +142,8 @@ export default function Layout() {
                     className="block text-gray-600"
                     onClick={() => setMobileMenuOpen(false)}
                   >
-                    My Binders
+                    <BookUser className="w-5 h-5" />
+                    <span>My binders</span>
                   </Link>
                   <Link
                     to="/messages"
