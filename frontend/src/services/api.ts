@@ -33,8 +33,25 @@ api.interceptors.response.use(
   response => response,
   error => {
     const requestUrl = error.config?.url ?? "";
+    const method = error.config?.method?.toUpperCase() ?? "";
+    const status = error.response?.status;
+    // Backend sends { error: "..." } (see backend/src/index.ts and route
+    // handlers); fall back to axios's own message if the response body
+    // doesn't have one (e.g. network failure, no response at all).
+    const serverMessage = error.response?.data?.error;
+
+    // Always surface API failures in the browser console, even when the
+    // calling component doesn't check `isError`/`error` itself — otherwise
+    // a failing request just looks like "no data" with no trace of why.
+    console.error(
+      `[API] ${method} ${requestUrl} failed${status ? ` (${status})` : ""}: ${
+        serverMessage || error.message
+      }`,
+      error
+    );
+
     if (
-      error.response?.status === 401 &&
+      status === 401 &&
       !requestUrl.includes("/auth/login") &&
       !requestUrl.includes("/auth/register")
     ) {
