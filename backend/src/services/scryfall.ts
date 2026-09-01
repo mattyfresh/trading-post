@@ -3,8 +3,25 @@
 
 const SCRYFALL_BASE_URL = "https://api.scryfall.com";
 
+// Scryfall requires an accurate User-Agent (not the HTTP library's default)
+// and an Accept header on every request.
+// https://scryfall.com/docs/api
+const SCRYFALL_USER_AGENT = "Trading-Post-App/1.0";
+
 // Rate limiting: Scryfall asks for 50-100ms between requests
 const delay = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
+
+// Wrapper around fetch that attaches Scryfall's required headers.
+function scryfallFetch(path: string, init?: RequestInit): Promise<Response> {
+  return fetch(`${SCRYFALL_BASE_URL}${path}`, {
+    ...init,
+    headers: {
+      "User-Agent": SCRYFALL_USER_AGENT,
+      Accept: "application/json;q=0.9,*/*;q=0.8",
+      ...init?.headers,
+    },
+  });
+}
 
 export interface ScryfallCard {
   id: string;
@@ -70,7 +87,7 @@ export async function searchCards(
     page: page.toString(),
   });
 
-  const response = await fetch(`${SCRYFALL_BASE_URL}/cards/search?${params}`);
+  const response = await scryfallFetch(`/cards/search?${params}`);
 
   if (!response.ok) {
     if (response.status === 404) {
@@ -94,7 +111,7 @@ export async function getCardById(
 ): Promise<ScryfallCard | null> {
   await delay(100); // Rate limiting
 
-  const response = await fetch(`${SCRYFALL_BASE_URL}/cards/${scryfallId}`);
+  const response = await scryfallFetch(`/cards/${scryfallId}`);
 
   if (!response.ok) {
     if (response.status === 404) {
@@ -111,9 +128,7 @@ export async function autocompleteCardName(query: string): Promise<string[]> {
   await delay(50); // Rate limiting (autocomplete is lighter)
 
   const params = new URLSearchParams({ q: query });
-  const response = await fetch(
-    `${SCRYFALL_BASE_URL}/cards/autocomplete?${params}`
-  );
+  const response = await scryfallFetch(`/cards/autocomplete?${params}`);
 
   if (!response.ok) {
     return [];
@@ -137,7 +152,7 @@ export async function getCardPrintings(
     dir: "asc",
   });
 
-  const response = await fetch(`${SCRYFALL_BASE_URL}/cards/search?${params}`);
+  const response = await scryfallFetch(`/cards/search?${params}`);
 
   if (!response.ok) {
     if (response.status === 404) {
@@ -154,7 +169,7 @@ export async function getCardPrintings(
 export async function getRandomCard(): Promise<ScryfallCard> {
   await delay(100);
 
-  const response = await fetch(`${SCRYFALL_BASE_URL}/cards/random`);
+  const response = await scryfallFetch(`/cards/random`);
 
   if (!response.ok) {
     throw new Error(`Scryfall API error: ${response.status}`);
@@ -166,16 +181,16 @@ export async function getRandomCard(): Promise<ScryfallCard> {
 // Transform Scryfall card to our database format
 export function transformScryfallCard(card: ScryfallCard) {
   return {
-    scryfallId: card.id,
-    name: card.name,
-    setCode: card.set,
-    setName: card.set_name,
     imageUrl: getCardImageUrl(card),
     manaCost: card.mana_cost || null,
-    typeLine: card.type_line || null,
-    rarity: card.rarity,
+    name: card.name,
     priceEur: card.prices.eur ? parseFloat(card.prices.eur) : null,
-    priceUsd: card.prices.usd ? parseFloat(card.prices.usd) : null,
     priceUpdatedAt: new Date(),
+    priceUsd: card.prices.usd ? parseFloat(card.prices.usd) : null,
+    rarity: card.rarity,
+    scryfallId: card.id,
+    setCode: card.set,
+    setName: card.set_name,
+    typeLine: card.type_line || null,
   };
 }
