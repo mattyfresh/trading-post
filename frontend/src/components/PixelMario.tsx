@@ -135,10 +135,7 @@ const JUMP_DURATION = 450; // ms
 const JUMP_HEIGHT = 20; // px
 const DECISION_INTERVAL: [number, number] = [1500, 3500]; // ms, random range
 
-function spriteToBoxShadow(
-  rows: string[],
-  colors: Record<string, string> = COLORS
-): string {
+function spriteToBoxShadow(rows: string[], colors: Record<string, string> = COLORS): string {
   const shadows: string[] = [];
   rows.forEach((row, y) => {
     [...row].forEach((char, x) => {
@@ -192,8 +189,7 @@ export default function PixelMario() {
 
     const applyFacing = () => {
       if (marioRef.current) {
-        marioRef.current.style.transform =
-          direction === 1 ? "scaleX(1)" : "scaleX(-1)";
+        marioRef.current.style.transform = direction === 1 ? "scaleX(1)" : "scaleX(-1)";
       }
     };
 
@@ -266,10 +262,7 @@ export default function PixelMario() {
 
     const scheduleNext = () => {
       timeoutId = window.setTimeout(() => {
-        const left = Math.min(
-          95,
-          Math.max(0, positionRef.current + randomBetween([-15, 15]))
-        );
+        const left = Math.min(95, Math.max(0, positionRef.current + randomBetween([-15, 15])));
         const { key } = CAMEOS[Math.floor(Math.random() * CAMEOS.length)];
         setCameo({ key, left });
 
@@ -284,7 +277,7 @@ export default function PixelMario() {
     return () => window.clearTimeout(timeoutId);
   }, []);
 
-  const activeCameo = cameo && CAMEOS.find(c => c.key === cameo.key);
+  const activeCameo = cameo && CAMEOS.find((c) => c.key === cameo.key);
 
   return (
     <div className="relative w-full h-20 overflow-hidden" role="presentation" aria-hidden="true">

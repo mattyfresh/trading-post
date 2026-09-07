@@ -54,6 +54,7 @@ The easiest way to get started is to run the setup script:
 ```
 
 This script will:
+
 1. Check for Node.js 18+
 2. Install pnpm if not present
 3. Install all dependencies

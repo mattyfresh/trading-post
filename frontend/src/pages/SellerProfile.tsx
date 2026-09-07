@@ -37,10 +37,7 @@ export default function SellerProfile() {
     return (
       <div className="max-w-7xl mx-auto px-4 py-8 text-center">
         <h1 className="text-2xl font-bold text-gray-900">Seller not found</h1>
-        <Link
-          to="/"
-          className="text-primary-600 hover:underline mt-4 inline-block"
-        >
+        <Link to="/" className="text-primary-600 hover:underline mt-4 inline-block">
           Go back home
         </Link>
       </div>
@@ -55,22 +52,14 @@ export default function SellerProfile() {
           <div className="flex items-center">
             <div className="w-16 h-16 bg-gray-200 rounded-full border-2 border-ink flex items-center justify-center overflow-hidden">
               {user.avatarUrl ? (
-                <img
-                  src={user.avatarUrl}
-                  alt={user.displayName}
-                  className="w-16 h-16 rounded-full"
-                />
+                <img src={user.avatarUrl} alt={user.displayName} className="w-16 h-16 rounded-full" />
               ) : (
                 <User className="w-8 h-8 text-gray-500" />
               )}
             </div>
             <div className="ml-4">
-              <h1 className="font-bold text-2xl text-ink">
-                {user.displayName}
-              </h1>
-              <p className="text-gray-500">
-                Member since {new Date(user.createdAt).toLocaleDateString()}
-              </p>
+              <h1 className="font-bold text-2xl text-ink">{user.displayName}</h1>
+              <p className="text-gray-500">Member since {new Date(user.createdAt).toLocaleDateString()}</p>
             </div>
           </div>
           {currentUser && currentUser.id !== id && (
@@ -86,12 +75,10 @@ export default function SellerProfile() {
       </div>
 
       {/* Binders */}
-      <h2 className="font-display text-base sm:text-lg text-ink mb-4">
-        Trade Binders
-      </h2>
+      <h2 className="font-display text-base sm:text-lg text-ink mb-4">Trade Binders</h2>
       {binders && binders.length > 0 ? (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {binders.map(binder => (
+          {binders.map((binder) => (
             <Link
               key={binder.id}
               to={`/binder/${binder.id}`}
@@ -100,19 +87,11 @@ export default function SellerProfile() {
               <div className="flex items-center">
                 <Folder className="w-8 h-8 text-primary-600 mr-3" />
                 <div>
-                  <h3 className="font-semibold text-lg text-gray-900">
-                    {binder.name}
-                  </h3>
-                  <p className="text-sm text-gray-500">
-                    {binder._count?.cards || 0} cards
-                  </p>
+                  <h3 className="font-semibold text-lg text-gray-900">{binder.name}</h3>
+                  <p className="text-sm text-gray-500">{binder._count?.cards || 0} cards</p>
                 </div>
               </div>
-              {binder.description && (
-                <p className="mt-3 text-gray-600 text-sm">
-                  {binder.description}
-                </p>
-              )}
+              {binder.description && <p className="mt-3 text-gray-600 text-sm">{binder.description}</p>}
             </Link>
           ))}
         </div>

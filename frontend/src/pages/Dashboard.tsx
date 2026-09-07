@@ -17,11 +17,7 @@ export default function Dashboard() {
   });
 
   const createMutation = useMutation({
-    mutationFn: (data: {
-      name: string;
-      description: string;
-      isPublic: boolean;
-    }) => bindersApi.createBinder(data),
+    mutationFn: (data: { name: string; description: string; isPublic: boolean }) => bindersApi.createBinder(data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["myBinders"] });
       setShowCreateModal(false);
@@ -49,9 +45,7 @@ export default function Dashboard() {
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
       <div className="flex justify-between items-center mb-8">
-        <h1 className="font-display text-lg sm:text-xl text-ink">
-          My binders
-        </h1>
+        <h1 className="font-display text-lg sm:text-xl text-ink">My binders</h1>
         <button
           onClick={() => setShowCreateModal(true)}
           className="flex items-center px-4 py-2 border-2 border-ink shadow-pixel-sm font-display text-[10px] tracking-wide bg-primary-600 text-white hover:bg-primary-700 active:shadow-none active:translate-x-1 active:translate-y-1 transition-colors"
@@ -78,12 +72,8 @@ export default function Dashboard() {
                 <div className="flex items-center">
                   <Folder className="w-8 h-8 text-primary-600 mr-3" />
                   <div>
-                    <h3 className="font-semibold text-lg text-gray-900">
-                      {binder.name}
-                    </h3>
-                    <p className="text-sm text-gray-500">
-                      {binder._count?.cards || 0} cards
-                    </p>
+                    <h3 className="font-semibold text-lg text-gray-900">{binder.name}</h3>
+                    <p className="text-sm text-gray-500">{binder._count?.cards || 0} cards</p>
                   </div>
                 </div>
                 <div className="flex space-x-2">
@@ -96,9 +86,7 @@ export default function Dashboard() {
                   </Link>
                   <button
                     onClick={() => {
-                      if (
-                        confirm("Are you sure you want to delete this binder?")
-                      ) {
+                      if (confirm("Are you sure you want to delete this binder?")) {
                         deleteMutation.mutate(binder.id);
                       }
                     }}
@@ -109,11 +97,7 @@ export default function Dashboard() {
                   </button>
                 </div>
               </div>
-              {binder.description && (
-                <p className="mt-3 text-gray-600 text-sm">
-                  {binder.description}
-                </p>
-              )}
+              {binder.description && <p className="mt-3 text-gray-600 text-sm">{binder.description}</p>}
               <Link
                 to={`/binder/${binder.id}`}
                 className="mt-4 inline-block text-primary-600 hover:underline text-sm font-medium"
@@ -126,12 +110,8 @@ export default function Dashboard() {
       ) : (
         <div className="text-center py-12">
           <Folder className="w-16 h-16 text-gray-300 mx-auto mb-4" />
-          <h3 className="text-lg font-medium text-gray-900 mb-2">
-            No binders yet
-          </h3>
-          <p className="text-gray-500 mb-4">
-            Create your first binder to start adding cards
-          </p>
+          <h3 className="text-lg font-medium text-gray-900 mb-2">No binders yet</h3>
+          <p className="text-gray-500 mb-4">Create your first binder to start adding cards</p>
           <button
             onClick={() => setShowCreateModal(true)}
             className="inline-flex items-center px-4 py-2 border-2 border-ink shadow-pixel-sm font-display text-[10px] tracking-wide bg-primary-600 text-white hover:bg-primary-700 active:shadow-none active:translate-x-1 active:translate-y-1"
@@ -146,30 +126,24 @@ export default function Dashboard() {
       {showCreateModal && (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
           <div className="bg-white border-4 border-ink shadow-pixel-lg p-6 w-full max-w-md mx-4">
-            <h2 className="font-display text-base sm:text-lg text-ink mb-4">
-              Create New Binder
-            </h2>
+            <h2 className="font-display text-base sm:text-lg text-ink mb-4">Create New Binder</h2>
             <form onSubmit={handleCreateBinder}>
               <div className="mb-4">
-                <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Binder Name
-                </label>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Binder Name</label>
                 <input
                   type="text"
                   value={newBinderName}
-                  onChange={e => setNewBinderName(e.target.value)}
+                  onChange={(e) => setNewBinderName(e.target.value)}
                   className="w-full px-4 py-2 border-2 border-ink focus:ring-2 focus:ring-primary-500"
                   placeholder="My Trade Binder"
                   required
                 />
               </div>
               <div className="mb-6">
-                <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Description (optional)
-                </label>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Description (optional)</label>
                 <textarea
                   value={newBinderDescription}
-                  onChange={e => setNewBinderDescription(e.target.value)}
+                  onChange={(e) => setNewBinderDescription(e.target.value)}
                   className="w-full px-4 py-2 border-2 border-ink focus:ring-2 focus:ring-primary-500"
                   placeholder="Cards I'm looking to trade or sell"
                   rows={3}

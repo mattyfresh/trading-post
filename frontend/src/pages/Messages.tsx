@@ -15,16 +15,12 @@ export default function Messages() {
   const queryClient = useQueryClient();
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
-  const [selectedConversation, setSelectedConversation] = useState<
-    string | null
-  >(id || null);
+  const [selectedConversation, setSelectedConversation] = useState<string | null>(id || null);
   const [newMessage, setNewMessage] = useState("");
   const [composeMessage, setComposeMessage] = useState("");
 
   // If ?seller= is set and we don't already have a conversation open, show compose view
-  const [composingSellerId, setComposingSellerId] = useState<string | null>(
-    sellerParam && !id ? sellerParam : null,
-  );
+  const [composingSellerId, setComposingSellerId] = useState<string | null>(sellerParam && !id ? sellerParam : null);
 
   const { data: conversations, isLoading } = useQuery({
     queryKey: ["conversations"],
@@ -51,9 +47,8 @@ export default function Messages() {
   });
 
   const createConversationMutation = useMutation({
-    mutationFn: (data: { sellerId: string; message: string }) =>
-      conversationsApi.createConversation(data),
-    onSuccess: conv => {
+    mutationFn: (data: { sellerId: string; message: string }) => conversationsApi.createConversation(data),
+    onSuccess: (conv) => {
       queryClient.invalidateQueries({ queryKey: ["conversations"] });
       setComposingSellerId(null);
       setComposeMessage("");
@@ -62,13 +57,8 @@ export default function Messages() {
   });
 
   const sendMessageMutation = useMutation({
-    mutationFn: ({
-      conversationId,
-      content,
-    }: {
-      conversationId: string;
-      content: string;
-    }) => conversationsApi.sendMessage(conversationId, content),
+    mutationFn: ({ conversationId, content }: { conversationId: string; content: string }) =>
+      conversationsApi.sendMessage(conversationId, content),
     onSuccess: (_, { conversationId }) => {
       queryClient.invalidateQueries({
         queryKey: ["conversation", conversationId],
@@ -78,29 +68,19 @@ export default function Messages() {
     },
   });
 
-  // Auto-select first conversation if none selected and not composing
-  useEffect(() => {
-    if (
-      !selectedConversation &&
-      !composingSellerId &&
-      conversations &&
-      conversations.length > 0
-    ) {
-      setSelectedConversation(conversations[0].id);
-    }
-  }, [conversations, selectedConversation, composingSellerId]);
+  // Auto-select the first conversation if none is selected and not composing.
+  if (!selectedConversation && !composingSellerId && conversations && conversations.length > 0) {
+    setSelectedConversation(conversations[0].id);
+  }
 
-  // If seller param arrives and we already have a conversation with them, select it
-  useEffect(() => {
-    if (!sellerParam || !conversations) return;
-    const existing = conversations.find(
-      c => c.sellerId === sellerParam || c.buyerId === sellerParam,
-    );
-    if (existing) {
+  // If the seller param arrives and we already have a conversation with them, select it.
+  if (sellerParam && conversations) {
+    const existing = conversations.find((c) => c.sellerId === sellerParam || c.buyerId === sellerParam);
+    if (existing && (composingSellerId !== null || selectedConversation !== existing.id)) {
       setComposingSellerId(null);
       setSelectedConversation(existing.id);
     }
-  }, [sellerParam, conversations]);
+  }
 
   // Instantly jump to bottom when switching conversations; smooth scroll for new messages
   const prevConversationIdRef = useRef<string | null>(null);
@@ -114,12 +94,7 @@ export default function Messages() {
 
   // Listen for real-time messages via socket
   useEffect(() => {
-    const handler = ({
-      conversationId,
-    }: {
-      conversationId: string;
-      message: Message;
-    }) => {
+    const handler = ({ conversationId }: { conversationId: string; message: Message }) => {
       // Refresh the active thread if it's the one receiving a message
       queryClient.invalidateQueries({
         queryKey: ["conversation", conversationId],
@@ -134,8 +109,7 @@ export default function Messages() {
     };
   }, [queryClient]);
 
-  const getOtherUser = (conv: Conversation) =>
-    conv.buyerId === user?.id ? conv.seller : conv.buyer;
+  const getOtherUser = (conv: Conversation) => (conv.buyerId === user?.id ? conv.seller : conv.buyer);
 
   const handleSendMessage = (e: React.FormEvent) => {
     e.preventDefault();
@@ -157,14 +131,9 @@ export default function Messages() {
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-      <h1 className="font-display text-lg sm:text-xl text-ink mb-8">
-        Messages
-      </h1>
+      <h1 className="font-display text-lg sm:text-xl text-ink mb-8">Messages</h1>
 
-      <div
-        className="bg-white border-2 border-ink shadow-pixel-sm overflow-hidden"
-        style={{ height: "70vh" }}
-      >
+      <div className="bg-white border-2 border-ink shadow-pixel-sm overflow-hidden" style={{ height: "70vh" }}>
         <div className="flex h-full">
           {/* Conversation List */}
           <div className="w-1/3 border-r overflow-y-auto">
@@ -175,7 +144,7 @@ export default function Messages() {
                 ))}
               </div>
             ) : conversations && conversations.length > 0 ? (
-              conversations.map(conv => {
+              conversations.map((conv) => {
                 const otherUser = getOtherUser(conv);
                 return (
                   <div
@@ -185,15 +154,11 @@ export default function Messages() {
                       setComposingSellerId(null);
                     }}
                     className={`p-4 border-b cursor-pointer hover:bg-gray-50 ${
-                      selectedConversation === conv.id && !composingSellerId
-                        ? "bg-primary-50"
-                        : ""
+                      selectedConversation === conv.id && !composingSellerId ? "bg-primary-50" : ""
                     }`}
                   >
                     <div className="flex items-center justify-between">
-                      <span className="font-medium text-gray-900">
-                        {otherUser.displayName}
-                      </span>
+                      <span className="font-medium text-gray-900">{otherUser.displayName}</span>
                       {!!conv?.unreadCount && (
                         <span className="bg-primary-600 text-white text-xs px-2 py-1 rounded-full">
                           {conv.unreadCount}
@@ -201,14 +166,10 @@ export default function Messages() {
                       )}
                     </div>
                     {conv.binderCard && (
-                      <p className="text-sm text-gray-500 truncate">
-                        Re: {conv.binderCard.card.name}
-                      </p>
+                      <p className="text-sm text-gray-500 truncate">Re: {conv.binderCard.card.name}</p>
                     )}
                     {conv.messages[0] && (
-                      <p className="text-sm text-gray-500 truncate mt-1">
-                        {conv.messages[0].content}
-                      </p>
+                      <p className="text-sm text-gray-500 truncate mt-1">{conv.messages[0].content}</p>
                     )}
                   </div>
                 );
@@ -217,9 +178,7 @@ export default function Messages() {
               <div className="p-8 text-center text-gray-500">
                 <MessageIcon className="w-12 h-12 mx-auto mb-4 text-gray-300" />
                 <p>No conversations yet</p>
-                <p className="text-sm mt-2">
-                  Start a conversation by contacting a seller
-                </p>
+                <p className="text-sm mt-2">Start a conversation by contacting a seller</p>
               </div>
             )}
           </div>
@@ -236,29 +195,21 @@ export default function Messages() {
                   </h2>
                 </div>
                 <div className="flex-1 flex items-center justify-center text-gray-400">
-                  <p className="text-sm">
-                    Send your first message below to start the chat.
-                  </p>
+                  <p className="text-sm">Send your first message below to start the chat.</p>
                 </div>
-                <form
-                  onSubmit={handleStartConversation}
-                  className="p-4 border-t"
-                >
+                <form onSubmit={handleStartConversation} className="p-4 border-t">
                   <div className="flex space-x-2">
                     <input
                       type="text"
                       value={composeMessage}
-                      onChange={e => setComposeMessage(e.target.value)}
+                      onChange={(e) => setComposeMessage(e.target.value)}
                       placeholder={`Message ${composeSeller?.displayName ?? "seller"}…`}
                       className="flex-1 px-4 py-2 border-2 border-ink focus:ring-2 focus:ring-primary-500"
                       autoFocus
                     />
                     <button
                       type="submit"
-                      disabled={
-                        !composeMessage.trim() ||
-                        createConversationMutation.isPending
-                      }
+                      disabled={!composeMessage.trim() || createConversationMutation.isPending}
                       className="px-4 py-2 border-2 border-ink shadow-pixel-sm bg-primary-600 text-white hover:bg-primary-700 active:shadow-none active:translate-x-1 active:translate-y-1 disabled:opacity-50 disabled:active:shadow-pixel-sm disabled:active:translate-x-0 disabled:active:translate-y-0"
                     >
                       <Send className="w-5 h-5" />
@@ -270,13 +221,9 @@ export default function Messages() {
               <>
                 {/* Header */}
                 <div className="p-4 border-b bg-gray-50">
-                  <h2 className="font-semibold text-gray-900">
-                    {getOtherUser(activeConversation).displayName}
-                  </h2>
+                  <h2 className="font-semibold text-gray-900">{getOtherUser(activeConversation).displayName}</h2>
                   {activeConversation.binderCard && (
-                    <p className="text-sm text-gray-500">
-                      About: {activeConversation.binderCard.card.name}
-                    </p>
+                    <p className="text-sm text-gray-500">About: {activeConversation.binderCard.card.name}</p>
                   )}
                 </div>
 
@@ -289,9 +236,7 @@ export default function Messages() {
                     >
                       <div
                         className={`max-w-xs lg:max-w-md px-4 py-2 rounded-lg border-2 border-ink shadow-pixel p-2 ${
-                          message.senderId === user?.id
-                            ? "bg-primary-600 text-white"
-                            : "bg-gray-100 text-gray-900"
+                          message.senderId === user?.id ? "bg-primary-600 text-white" : "bg-gray-100 text-gray-900"
                         }`}
                       >
                         <p>{message.content}</p>
@@ -315,15 +260,13 @@ export default function Messages() {
                     <input
                       type="text"
                       value={newMessage}
-                      onChange={e => setNewMessage(e.target.value)}
+                      onChange={(e) => setNewMessage(e.target.value)}
                       placeholder="Type a message..."
                       className="flex-1 px-4 py-2 border-2 border-ink focus:ring-2 focus:ring-primary-500"
                     />
                     <button
                       type="submit"
-                      disabled={
-                        !newMessage.trim() || sendMessageMutation.isPending
-                      }
+                      disabled={!newMessage.trim() || sendMessageMutation.isPending}
                       className="px-4 py-2 border-2 border-ink shadow-pixel-sm bg-primary-600 text-white hover:bg-primary-700 active:shadow-none active:translate-x-1 active:translate-y-1 disabled:opacity-50 disabled:active:shadow-pixel-sm disabled:active:translate-x-0 disabled:active:translate-y-0"
                     >
                       <Send className="w-5 h-5" />

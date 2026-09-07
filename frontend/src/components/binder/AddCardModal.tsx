@@ -16,38 +16,34 @@ interface AddCardModalProps {
   onClose: () => void;
 }
 
-export default function AddCardModal({
-  isPending,
-  onAdd,
-  onClose,
-}: AddCardModalProps) {
+export default function AddCardModal({ isPending, onAdd, onClose }: AddCardModalProps) {
   const [searchQuery, setSearchQuery] = useState("");
   const [searchResults, setSearchResults] = useState<ScryfallCard[]>([]);
   const [selectedCard, setSelectedCard] = useState<ScryfallCard | null>(null);
   const [isSearching, setIsSearching] = useState(false);
   const [printings, setPrintings] = useState<ScryfallCard[]>([]);
   const [isFetchingPrintings, setIsFetchingPrintings] = useState(false);
-  const [selectedPrinting, setSelectedPrinting] = useState<ScryfallCard | null>(
-    null,
-  );
+  const [selectedPrinting, setSelectedPrinting] = useState<ScryfallCard | null>(null);
   const [askingPrice, setAskingPrice] = useState("");
   const [justAdded, setJustAdded] = useState(false);
 
   const debouncedSearchQuery = useDebounce(searchQuery, 400);
 
+  const visibleResults = debouncedSearchQuery.length < 2 ? [] : searchResults;
+
   useEffect(() => {
     if (debouncedSearchQuery.length < 2) {
-      setSearchResults([]);
       return;
     }
     let cancelled = false;
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- standard fetch-on-change loading flag
     setIsSearching(true);
     cardsApi
       .search(debouncedSearchQuery)
-      .then(result => {
+      .then((result) => {
         if (!cancelled) setSearchResults(result.cards);
       })
-      .catch(error => {
+      .catch((error) => {
         if (!cancelled) console.error("Search failed:", error);
       })
       .finally(() => {
@@ -65,9 +61,9 @@ export default function AddCardModal({
     setIsFetchingPrintings(true);
     cardsApi
       .getPrintings(card.name)
-      .then(results => {
+      .then((results) => {
         setPrintings(results);
-        const match = results.find(p => p.scryfallId === card.scryfallId);
+        const match = results.find((p) => p.scryfallId === card.scryfallId);
         setSelectedPrinting(match ?? results[0] ?? card);
       })
       .catch(() => {
@@ -93,16 +89,14 @@ export default function AddCardModal({
   return (
     <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
       <div className="bg-white border-4 border-ink shadow-pixel-lg p-6 w-full max-w-2xl max-h-[90vh] overflow-y-auto">
-        <h2 className="font-display text-base sm:text-lg text-ink mb-4">
-          Add Card to Binder
-        </h2>
+        <h2 className="font-display text-base sm:text-lg text-ink mb-4">Add Card to Binder</h2>
 
         {/* Search */}
         <div className="relative mb-4">
           <input
             type="text"
             value={searchQuery}
-            onChange={e => {
+            onChange={(e) => {
               setSearchQuery(e.target.value);
               if (justAdded) setJustAdded(false);
             }}
@@ -125,19 +119,15 @@ export default function AddCardModal({
         )}
 
         {/* Search Results */}
-        {searchResults.length > 0 && !selectedCard && (
+        {visibleResults.length > 0 && !selectedCard && (
           <div className="grid grid-cols-3 gap-4 mb-4">
-            {searchResults.slice(0, 9).map(card => (
+            {visibleResults.slice(0, 9).map((card) => (
               <div
                 key={card.scryfallId}
                 onClick={() => handleSelectCard(card)}
                 className="cursor-pointer hover:ring-2 hover:ring-primary-500 rounded-lg overflow-hidden"
               >
-                <img
-                  src={card.imageUrl}
-                  alt={card.name}
-                  className="w-full aspect-card object-cover"
-                />
+                <img src={card.imageUrl} alt={card.name} className="w-full aspect-card object-cover" />
               </div>
             ))}
           </div>
@@ -146,15 +136,14 @@ export default function AddCardModal({
         {/* Selected Card Form */}
         {selectedCard && activePrinting && (
           <form
-            onSubmit={async e => {
+            onSubmit={async (e) => {
               e.preventDefault();
               const formData = new FormData(e.currentTarget);
               await onAdd({
                 scryfallId: activePrinting.scryfallId,
                 quantity: parseInt(formData.get("quantity") as string) || 1,
                 condition: (formData.get("condition") as string) || "NEAR_MINT",
-                askingPrice:
-                  askingPrice !== "" ? parseFloat(askingPrice) : null,
+                askingPrice: askingPrice !== "" ? parseFloat(askingPrice) : null,
                 notes: (formData.get("notes") as string) || "",
               });
               resetToSearch(true);
@@ -162,19 +151,13 @@ export default function AddCardModal({
             }}
           >
             <div className="flex space-x-4 mb-4">
-              <img
-                src={activePrinting.imageUrl}
-                alt={activePrinting.name}
-                className="w-48 rounded-lg object-contain"
-              />
+              <img src={activePrinting.imageUrl} alt={activePrinting.name} className="w-48 rounded-lg object-contain" />
               <div className="flex-1 space-y-3">
                 <h3 className="font-semibold">{selectedCard.name}</h3>
 
                 {/* Set / Printing selector */}
                 <div>
-                  <label className="block text-sm font-medium text-gray-700">
-                    Set
-                  </label>
+                  <label className="block text-sm font-medium text-gray-700">Set</label>
                   {isFetchingPrintings ? (
                     <div className="flex items-center space-x-2 text-sm text-gray-500">
                       <Loader className="w-4 h-4 animate-spin" />
@@ -184,32 +167,26 @@ export default function AddCardModal({
                     <select
                       className="w-full px-3 py-1 border-2 border-ink text-sm"
                       value={activePrinting.scryfallId}
-                      onChange={e => {
-                        const printing = printings.find(
-                          p => p.scryfallId === e.target.value,
-                        );
+                      onChange={(e) => {
+                        const printing = printings.find((p) => p.scryfallId === e.target.value);
                         if (printing) {
                           setSelectedPrinting(printing);
                           setAskingPrice("");
                         }
                       }}
                     >
-                      {(printings.length > 0 ? printings : [selectedCard]).map(
-                        p => (
-                          <option key={p.scryfallId} value={p.scryfallId}>
-                            {p.setName} ({p.setCode.toUpperCase()})
-                          </option>
-                        ),
-                      )}
+                      {(printings.length > 0 ? printings : [selectedCard]).map((p) => (
+                        <option key={p.scryfallId} value={p.scryfallId}>
+                          {p.setName} ({p.setCode.toUpperCase()})
+                        </option>
+                      ))}
                     </select>
                   )}
                 </div>
 
                 <div className="grid grid-cols-2 gap-3">
                   <div>
-                    <label className="block text-sm font-medium text-gray-700">
-                      Quantity
-                    </label>
+                    <label className="block text-sm font-medium text-gray-700">Quantity</label>
                     <input
                       type="number"
                       name="quantity"
@@ -220,14 +197,8 @@ export default function AddCardModal({
                     />
                   </div>
                   <div>
-                    <label className="block text-sm font-medium text-gray-700">
-                      Condition
-                    </label>
-                    <select
-                      name="condition"
-                      defaultValue="NEAR_MINT"
-                      className="w-full px-3 py-1 border-2 border-ink"
-                    >
+                    <label className="block text-sm font-medium text-gray-700">Condition</label>
+                    <select name="condition" defaultValue="NEAR_MINT" className="w-full px-3 py-1 border-2 border-ink">
                       <option value="MINT">Mint</option>
                       <option value="NEAR_MINT">Near Mint</option>
                       <option value="EXCELLENT">Excellent</option>
@@ -240,9 +211,7 @@ export default function AddCardModal({
 
                 <div>
                   <div className="flex items-center justify-between mb-1">
-                    <label className="block text-sm font-medium text-gray-700">
-                      Asking Price (€)
-                    </label>
+                    <label className="block text-sm font-medium text-gray-700">Asking Price (€)</label>
                     {activePrinting.priceEur && (
                       <button
                         type="button"
@@ -261,7 +230,7 @@ export default function AddCardModal({
                     placeholder="Leave empty for no price"
                     className="w-full px-3 py-1 border-2 border-ink"
                     value={askingPrice}
-                    onChange={e => setAskingPrice(e.target.value)}
+                    onChange={(e) => setAskingPrice(e.target.value)}
                   />
                 </div>
               </div>
@@ -290,10 +259,7 @@ export default function AddCardModal({
 
         {!selectedCard && (
           <div className="flex justify-end">
-            <button
-              onClick={onClose}
-              className="px-4 py-2 font-bold uppercase tracking-wide text-xs text-ink"
-            >
+            <button onClick={onClose} className="px-4 py-2 font-bold uppercase tracking-wide text-xs text-ink">
               Cancel
             </button>
           </div>

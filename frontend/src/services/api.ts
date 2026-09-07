@@ -19,8 +19,16 @@ const api = axios.create({
   },
 });
 
+// Pulls the API's { error: string } message out of a failed request.
+export function getErrorMessage(err: unknown, fallback: string): string {
+  if (axios.isAxiosError(err) && typeof err.response?.data?.error === "string") {
+    return err.response.data.error;
+  }
+  return fallback;
+}
+
 // Add auth token to requests
-api.interceptors.request.use(config => {
+api.interceptors.request.use((config) => {
   const token = localStorage.getItem("token");
   if (token) {
     config.headers.Authorization = `Bearer ${token}`;
@@ -30,8 +38,8 @@ api.interceptors.request.use(config => {
 
 // Handle auth errors
 api.interceptors.response.use(
-  response => response,
-  error => {
+  (response) => response,
+  (error) => {
     const requestUrl = error.config?.url ?? "";
     const method = error.config?.method?.toUpperCase() ?? "";
     const status = error.response?.status;
@@ -44,39 +52,27 @@ api.interceptors.response.use(
     // calling component doesn't check `isError`/`error` itself — otherwise
     // a failing request just looks like "no data" with no trace of why.
     console.error(
-      `[API] ${method} ${requestUrl} failed${status ? ` (${status})` : ""}: ${
-        serverMessage || error.message
-      }`,
-      error
+      `[API] ${method} ${requestUrl} failed${status ? ` (${status})` : ""}: ${serverMessage || error.message}`,
+      error,
     );
 
-    if (
-      status === 401 &&
-      !requestUrl.includes("/auth/login") &&
-      !requestUrl.includes("/auth/register")
-    ) {
+    if (status === 401 && !requestUrl.includes("/auth/login") && !requestUrl.includes("/auth/register")) {
       localStorage.removeItem("token");
       window.location.href = "/login";
     }
     return Promise.reject(error);
-  }
+  },
 );
 
 // Auth API
 export const authApi = {
   register: async (data: RegisterFormData) => {
-    const response = await api.post<{ user: User; token: string }>(
-      "/auth/register",
-      data
-    );
+    const response = await api.post<{ user: User; token: string }>("/auth/register", data);
     return response.data;
   },
 
   login: async (data: LoginFormData) => {
-    const response = await api.post<{ user: User; token: string }>(
-      "/auth/login",
-      data
-    );
+    const response = await api.post<{ user: User; token: string }>("/auth/login", data);
     return response.data;
   },
 
@@ -104,9 +100,7 @@ export const usersApi = {
   },
 
   getUserBinders: async (id: string) => {
-    const response = await api.get<{ binders: Binder[] }>(
-      `/users/${id}/binders`
-    );
+    const response = await api.get<{ binders: Binder[] }>(`/users/${id}/binders`);
     return response.data.binders;
   },
 };
@@ -123,27 +117,19 @@ export const cardsApi = {
   },
 
   autocomplete: async (query: string) => {
-    const response = await api.get<{ suggestions: string[] }>(
-      "/cards/autocomplete",
-      {
-        params: { q: query },
-      }
-    );
+    const response = await api.get<{ suggestions: string[] }>("/cards/autocomplete", {
+      params: { q: query },
+    });
     return response.data.suggestions;
   },
 
   getCard: async (scryfallId: string) => {
-    const response = await api.get<{ card: ScryfallCard }>(
-      `/cards/${scryfallId}`
-    );
+    const response = await api.get<{ card: ScryfallCard }>(`/cards/${scryfallId}`);
     return response.data.card;
   },
 
   getPrintings: async (name: string) => {
-    const response = await api.get<{ printings: ScryfallCard[] }>(
-      "/cards/printings",
-      { params: { name } }
-    );
+    const response = await api.get<{ printings: ScryfallCard[] }>("/cards/printings", { params: { name } });
     return response.data.printings;
   },
 };
@@ -161,9 +147,7 @@ export const bindersApi = {
   },
 
   getBinder: async (id: string) => {
-    const response = await api.get<{ binder: Binder; isOwner: boolean }>(
-      `/binders/${id}`
-    );
+    const response = await api.get<{ binder: Binder; isOwner: boolean }>(`/binders/${id}`);
     return response.data;
   },
 
@@ -177,22 +161,12 @@ export const bindersApi = {
   },
 
   addCard: async (binderId: string, data: AddCardFormData) => {
-    const response = await api.post<{ binderCard: BinderCard }>(
-      `/binders/${binderId}/cards`,
-      data
-    );
+    const response = await api.post<{ binderCard: BinderCard }>(`/binders/${binderId}/cards`, data);
     return response.data.binderCard;
   },
 
-  updateCard: async (
-    binderId: string,
-    cardId: string,
-    data: Partial<BinderCard>
-  ) => {
-    const response = await api.put<{ binderCard: BinderCard }>(
-      `/binders/${binderId}/cards/${cardId}`,
-      data
-    );
+  updateCard: async (binderId: string, cardId: string, data: Partial<BinderCard>) => {
+    const response = await api.put<{ binderCard: BinderCard }>(`/binders/${binderId}/cards/${cardId}`, data);
     return response.data.binderCard;
   },
 
@@ -201,9 +175,7 @@ export const bindersApi = {
   },
 
   toggleAvailability: async (binderId: string, cardId: string) => {
-    const response = await api.patch<{ binderCard: BinderCard }>(
-      `/binders/${binderId}/cards/${cardId}/availability`
-    );
+    const response = await api.patch<{ binderCard: BinderCard }>(`/binders/${binderId}/cards/${cardId}/availability`);
     return response.data.binderCard;
   },
 };
@@ -231,11 +203,7 @@ export const searchApi = {
     return response.data;
   },
 
-  searchSellers: async (params: {
-    q?: string;
-    page?: number;
-    limit?: number;
-  }) => {
+  searchSellers: async (params: { q?: string; page?: number; limit?: number }) => {
     const response = await api.get<{
       sellers: (User & { totalAvailableCards: number; binders: Binder[] })[];
       pagination: {
@@ -249,9 +217,7 @@ export const searchApi = {
   },
 
   getFeatured: async () => {
-    const response = await api.get<{ featured: BinderCard[] }>(
-      "/search/featured"
-    );
+    const response = await api.get<{ featured: BinderCard[] }>("/search/featured");
     return response.data.featured;
   },
 };
@@ -259,36 +225,22 @@ export const searchApi = {
 // Conversations API
 export const conversationsApi = {
   getConversations: async () => {
-    const response = await api.get<{ conversations: Conversation[] }>(
-      "/conversations"
-    );
+    const response = await api.get<{ conversations: Conversation[] }>("/conversations");
     return response.data.conversations;
   },
 
-  createConversation: async (data: {
-    sellerId: string;
-    binderCardId?: string;
-    message: string;
-  }) => {
-    const response = await api.post<{ conversation: Conversation }>(
-      "/conversations",
-      data
-    );
+  createConversation: async (data: { sellerId: string; binderCardId?: string; message: string }) => {
+    const response = await api.post<{ conversation: Conversation }>("/conversations", data);
     return response.data.conversation;
   },
 
   getConversation: async (id: string) => {
-    const response = await api.get<{ conversation: Conversation }>(
-      `/conversations/${id}`
-    );
+    const response = await api.get<{ conversation: Conversation }>(`/conversations/${id}`);
     return response.data.conversation;
   },
 
   sendMessage: async (conversationId: string, content: string) => {
-    const response = await api.post<{ message: Message }>(
-      `/conversations/${conversationId}/messages`,
-      { content }
-    );
+    const response = await api.post<{ message: Message }>(`/conversations/${conversationId}/messages`, { content });
     return response.data.message;
   },
 
@@ -297,9 +249,7 @@ export const conversationsApi = {
   },
 
   getUnreadCount: async () => {
-    const response = await api.get<{ unreadCount: number }>(
-      "/conversations/unread/count"
-    );
+    const response = await api.get<{ unreadCount: number }>("/conversations/unread/count");
     return response.data.unreadCount;
   },
 };

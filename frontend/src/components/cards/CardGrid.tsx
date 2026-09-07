@@ -9,11 +9,7 @@ interface CardGridProps {
   onCardClick?: (card: BinderCard) => void;
 }
 
-export default function CardGrid({
-  cards,
-  showSeller = true,
-  onCardClick,
-}: CardGridProps) {
+export default function CardGrid({ cards, showSeller = true, onCardClick }: CardGridProps) {
   const navigate = useNavigate();
 
   const handleCardClick = (binderCard: BinderCard) => {
@@ -28,13 +24,8 @@ export default function CardGrid({
 
   return (
     <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4">
-      {cards.map(binderCard => (
-        <div
-          key={binderCard.id}
-          className={`group relative ${
-            !binderCard.isAvailable ? "opacity-60" : ""
-          }`}
-        >
+      {cards.map((binderCard) => (
+        <div key={binderCard.id} className={`group relative ${!binderCard.isAvailable ? "opacity-60" : ""}`}>
           {/* Card Image */}
           <div
             className="aspect-card overflow-hidden bg-gray-200 card-hover cursor-pointer card-sleeve border-2 border-ink shadow-pixel-sm"
@@ -50,9 +41,7 @@ export default function CardGrid({
             {/* Unavailable overlay */}
             {!binderCard.isAvailable && (
               <div className="absolute inset-0 bg-ink/80 flex items-center justify-center">
-                <span className="font-display text-white text-[10px] tracking-wider">
-                  SOLD
-                </span>
+                <span className="font-display text-white text-[10px] tracking-wider">SOLD</span>
               </div>
             )}
 
@@ -60,9 +49,7 @@ export default function CardGrid({
             {binderCard.isAvailable && (
               <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-colors flex items-end">
                 <div className="w-full p-2 bg-gradient-to-t from-black/80 to-transparent opacity-0 group-hover:opacity-100 transition-opacity">
-                  <p className="text-white text-xs font-medium truncate">
-                    {binderCard.card.name}
-                  </p>
+                  <p className="text-white text-xs font-medium truncate">{binderCard.card.name}</p>
                 </div>
               </div>
             )}
@@ -70,17 +57,11 @@ export default function CardGrid({
 
           {/* Card Info */}
           <div className="mt-2">
-            <p className="text-sm font-medium text-gray-900 truncate">
-              {binderCard.card.name}
-            </p>
+            <p className="text-sm font-medium text-gray-900 truncate">{binderCard.card.name}</p>
             <div className="flex items-center justify-between mt-1">
-              <span className="text-xs text-gray-500">
-                {CONDITION_LABELS[binderCard.condition]}
-              </span>
+              <span className="text-xs text-gray-500">{CONDITION_LABELS[binderCard.condition]}</span>
               {binderCard.askingPrice && (
-                <span className="text-sm font-semibold text-primary-600">
-                  €{binderCard.askingPrice.toFixed(2)}
-                </span>
+                <span className="text-sm font-semibold text-primary-600">€{binderCard.askingPrice.toFixed(2)}</span>
               )}
             </div>
 

@@ -10,11 +10,7 @@ export interface JwtPayload {
   email: string;
 }
 
-export const authenticateToken = (
-  req: AuthRequest,
-  res: Response,
-  next: NextFunction
-): void => {
+export const authenticateToken = (req: AuthRequest, res: Response, next: NextFunction): void => {
   const authHeader = req.headers["authorization"];
   const token = authHeader && authHeader.split(" ")[1]; // Bearer TOKEN
 
@@ -24,35 +20,25 @@ export const authenticateToken = (
   }
 
   try {
-    const decoded = jwt.verify(
-      token,
-      process.env.JWT_SECRET || "fallback-secret"
-    ) as JwtPayload;
+    const decoded = jwt.verify(token, process.env.JWT_SECRET || "fallback-secret") as JwtPayload;
 
     req.userId = decoded.userId;
     next();
-  } catch (error) {
+  } catch {
     res.status(403).json({ error: "Invalid or expired token" });
     return;
   }
 };
 
-export const optionalAuth = (
-  req: AuthRequest,
-  res: Response,
-  next: NextFunction
-): void => {
+export const optionalAuth = (req: AuthRequest, res: Response, next: NextFunction): void => {
   const authHeader = req.headers["authorization"];
   const token = authHeader && authHeader.split(" ")[1];
 
   if (token) {
     try {
-      const decoded = jwt.verify(
-        token,
-        process.env.JWT_SECRET || "fallback-secret"
-      ) as JwtPayload;
+      const decoded = jwt.verify(token, process.env.JWT_SECRET || "fallback-secret") as JwtPayload;
       req.userId = decoded.userId;
-    } catch (error) {
+    } catch {
       // Token invalid, but that's okay for optional auth
     }
   }

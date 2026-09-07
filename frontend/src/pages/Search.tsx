@@ -28,8 +28,7 @@ export default function Search() {
 
   const { data: sellerData, isLoading: sellersLoading } = useQuery({
     queryKey: ["searchSellers", sellerSearchTerm, sellerPage],
-    queryFn: () =>
-      searchApi.searchSellers({ q: sellerSearchTerm || undefined, page: sellerPage }),
+    queryFn: () => searchApi.searchSellers({ q: sellerSearchTerm || undefined, page: sellerPage }),
     enabled: tab === "sellers",
   });
 
@@ -83,7 +82,7 @@ export default function Search() {
                 <input
                   type="text"
                   value={cardQuery}
-                  onChange={e => setCardQuery(e.target.value)}
+                  onChange={(e) => setCardQuery(e.target.value)}
                   placeholder="Search for cards by name..."
                   className="w-full pl-12 pr-4 py-3 border-2 border-ink focus:ring-2 focus:ring-primary-500 focus:border-transparent"
                 />
@@ -106,14 +105,12 @@ export default function Search() {
             </div>
           ) : cardData?.cards && cardData.cards.length > 0 ? (
             <>
-              <p className="text-gray-600 mb-4">
-                Found {cardData.pagination.total} cards
-              </p>
+              <p className="text-gray-600 mb-4">Found {cardData.pagination.total} cards</p>
               <CardGrid cards={cardData.cards} />
               {cardData.pagination.totalPages > 1 && (
                 <div className="flex justify-center mt-8 space-x-2">
                   <button
-                    onClick={() => setCardPage(p => Math.max(1, p - 1))}
+                    onClick={() => setCardPage((p) => Math.max(1, p - 1))}
                     disabled={cardPage === 1}
                     className="px-4 py-2 border-2 border-ink disabled:opacity-50"
                   >
@@ -123,7 +120,7 @@ export default function Search() {
                     Page {cardPage} of {cardData.pagination.totalPages}
                   </span>
                   <button
-                    onClick={() => setCardPage(p => p + 1)}
+                    onClick={() => setCardPage((p) => p + 1)}
                     disabled={cardPage >= cardData.pagination.totalPages}
                     className="px-4 py-2 border-2 border-ink disabled:opacity-50"
                   >
@@ -154,7 +151,7 @@ export default function Search() {
                 <input
                   type="text"
                   value={sellerQuery}
-                  onChange={e => setSellerQuery(e.target.value)}
+                  onChange={(e) => setSellerQuery(e.target.value)}
                   placeholder="Search sellers by name..."
                   className="w-full pl-12 pr-4 py-3 border-2 border-ink focus:ring-2 focus:ring-primary-500 focus:border-transparent"
                 />
@@ -181,7 +178,7 @@ export default function Search() {
                 Found {sellerData.pagination.total} seller{sellerData.pagination.total !== 1 ? "s" : ""}
               </p>
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                {sellerData.sellers.map(seller => {
+                {sellerData.sellers.map((seller) => {
                   const visibleBinders = seller.binders.slice(0, 3);
                   const extraCount = seller.binders.length - visibleBinders.length;
                   return (
@@ -203,9 +200,7 @@ export default function Search() {
                           )}
                         </div>
                         <div className="ml-3 min-w-0">
-                          <h3 className="font-semibold text-gray-900 truncate">
-                            {seller.displayName}
-                          </h3>
+                          <h3 className="font-semibold text-gray-900 truncate">{seller.displayName}</h3>
                           <p className="text-sm text-gray-500">
                             {seller.totalAvailableCards} card{seller.totalAvailableCards !== 1 ? "s" : ""} available
                           </p>
@@ -213,7 +208,7 @@ export default function Search() {
                       </div>
                       {visibleBinders.length > 0 && (
                         <div className="space-y-1">
-                          {visibleBinders.map(binder => (
+                          {visibleBinders.map((binder) => (
                             <div key={binder.id} className="flex items-center text-sm text-gray-600">
                               <Folder className="w-4 h-4 mr-2 text-primary-500 flex-shrink-0" />
                               <span className="truncate">{binder.name}</span>
@@ -233,7 +228,7 @@ export default function Search() {
               {sellerData.pagination.totalPages > 1 && (
                 <div className="flex justify-center mt-8 space-x-2">
                   <button
-                    onClick={() => setSellerPage(p => Math.max(1, p - 1))}
+                    onClick={() => setSellerPage((p) => Math.max(1, p - 1))}
                     disabled={sellerPage === 1}
                     className="px-4 py-2 border-2 border-ink disabled:opacity-50"
                   >
@@ -243,7 +238,7 @@ export default function Search() {
                     Page {sellerPage} of {sellerData.pagination.totalPages}
                   </span>
                   <button
-                    onClick={() => setSellerPage(p => p + 1)}
+                    onClick={() => setSellerPage((p) => p + 1)}
                     disabled={sellerPage >= sellerData.pagination.totalPages}
                     className="px-4 py-2 border-2 border-ink disabled:opacity-50"
                   >

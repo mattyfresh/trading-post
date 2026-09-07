@@ -14,11 +14,7 @@ interface AuthState {
   setUser: (user: User | null) => void;
   setToken: (token: string | null) => void;
   login: (email: string, password: string) => Promise<void>;
-  register: (
-    email: string,
-    password: string,
-    displayName: string
-  ) => Promise<void>;
+  register: (email: string, password: string, displayName: string) => Promise<void>;
   logout: () => void;
   checkAuth: () => Promise<void>;
 }
@@ -31,9 +27,9 @@ export const useAuthStore = create<AuthState>()(
       isLoading: true,
       isAuthenticated: false,
 
-      setUser: user => set({ user, isAuthenticated: !!user }),
+      setUser: (user) => set({ user, isAuthenticated: !!user }),
 
-      setToken: token => {
+      setToken: (token) => {
         if (token) {
           localStorage.setItem("token", token);
         } else {
@@ -88,7 +84,7 @@ export const useAuthStore = create<AuthState>()(
     }),
     {
       name: "auth-storage",
-      partialize: state => ({ token: state.token }),
-    }
-  )
+      partialize: (state) => ({ token: state.token }),
+    },
+  ),
 );

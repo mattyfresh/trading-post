@@ -1,4 +1,5 @@
 import { Router, Response } from "express";
+import { Prisma } from "@prisma/client";
 import { prisma } from "../index.js";
 import { AuthRequest, optionalAuth } from "../middleware/auth.js";
 
@@ -21,56 +22,31 @@ router.get("/cards", optionalAuth, async (req: AuthRequest, res: Response) => {
     const limitNum = Math.min(parseInt(limit as string, 10), 50);
     const skip = (pageNum - 1) * limitNum;
 
-    // Build where clause
-    const where: any = {
+    // SQLite doesn't support mode: "insensitive", so we rely on LIKE (contains) being
+    // case-insensitive by default.
+    const cardWhere: Prisma.CardWhereInput = {};
+    if (q && typeof q === "string") {
+      cardWhere.name = { contains: q };
+    }
+    if (set && typeof set === "string") {
+      cardWhere.setCode = set.toLowerCase();
+    }
+
+    const priceWhere: Prisma.FloatNullableFilter = {};
+    if (minPrice) priceWhere.gte = parseFloat(minPrice as string);
+    if (maxPrice) priceWhere.lte = parseFloat(maxPrice as string);
+
+    const where: Prisma.BinderCardWhereInput = {
       isAvailable: true,
       binder: {
         isPublic: true,
+        // Filter out the requester's own cards, if they're logged in.
+        ...(req.userId ? { userId: { not: req.userId } } : {}),
       },
+      ...(Object.keys(cardWhere).length > 0 ? { card: cardWhere } : {}),
+      ...(Object.keys(priceWhere).length > 0 ? { askingPrice: priceWhere } : {}),
+      ...(condition && typeof condition === "string" ? { condition: condition.toUpperCase() } : {}),
     };
-
-    // Card name search (SQLite doesn't support mode: "insensitive", so we use LIKE which is case-insensitive by default)
-    if (q && typeof q === "string") {
-      where.card = {
-        name: {
-          contains: q,
-        },
-      };
-    }
-
-    // Set filter
-    if (set && typeof set === "string") {
-      where.card = {
-        ...where.card,
-        setCode: set.toLowerCase(),
-      };
-    }
-
-    // Price filters
-    if (minPrice) {
-      where.askingPrice = {
-        ...where.askingPrice,
-        gte: parseFloat(minPrice as string),
-      };
-    }
-    if (maxPrice) {
-      where.askingPrice = {
-        ...where.askingPrice,
-        lte: parseFloat(maxPrice as string),
-      };
-    }
-
-    // Condition filter
-    if (condition && typeof condition === "string") {
-      where.condition = condition.toUpperCase();
-    }
-
-    // Filter out my own cards (if the requester is logged in)
-    if (req.userId) {
-      where.binder.userId = {
-        not: req.userId,
-      };
-    }
 
     // Get total count
     const total = await prisma.binderCard.count({ where });
@@ -121,7 +97,7 @@ router.get("/sellers", async (req: AuthRequest, res: Response) => {
     const limitNum = Math.min(parseInt(limit as string, 10), 50);
     const skip = (pageNum - 1) * limitNum;
 
-    const where: any = {
+    const where: Prisma.UserWhereInput = {
       binders: {
         some: {
           isPublic: true,
@@ -169,12 +145,9 @@ router.get("/sellers", async (req: AuthRequest, res: Response) => {
     });
 
     // Calculate total available cards per seller
-    const sellersWithCardCount = sellers.map(seller => ({
+    const sellersWithCardCount = sellers.map((seller) => ({
       ...seller,
-      totalAvailableCards: seller.binders.reduce(
-        (sum, binder) => sum + binder._count.cards,
-        0
-      ),
+      totalAvailableCards: seller.binders.reduce((sum, binder) => sum + binder._count.cards, 0),
     }));
 
     res.json({

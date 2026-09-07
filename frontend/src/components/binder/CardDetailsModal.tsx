@@ -20,36 +20,26 @@ export default function CardDetailsModal({
   onToggleAvailability,
   onRemove,
 }: CardDetailsModalProps) {
-  const currentUser = useAuthStore(state => state.user);
+  const currentUser = useAuthStore((state) => state.user);
   const isOwner = !!currentUser && currentUser.id === seller?.id;
   const [confirmDelete, setConfirmDelete] = useState(false);
   return (
-    <div
-      className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4"
-      onClick={onClose}
-    >
+    <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4" onClick={onClose}>
       <div
         className="bg-white border-4 border-ink shadow-pixel-lg p-6 w-full max-w-2xl"
-        onClick={e => e.stopPropagation()}
+        onClick={(e) => e.stopPropagation()}
       >
         {/* Header */}
         <div className="flex items-start justify-between mb-4">
           {/* Card name is dynamic Scryfall data — keep font-sans, just bolder */}
           <h2 className="font-bold text-xl text-ink">{card.card.name}</h2>
-          <button
-            onClick={onClose}
-            className="p-1 hover:bg-gray-100 text-gray-500"
-          >
+          <button onClick={onClose} className="p-1 hover:bg-gray-100 text-gray-500">
             <X className="w-5 h-5" />
           </button>
         </div>
 
         <div className="flex space-x-4">
-          <img
-            src={card.card.imageUrl}
-            alt={card.card.name}
-            className="w-56 rounded-lg object-contain flex-shrink-0"
-          />
+          <img src={card.card.imageUrl} alt={card.card.name} className="w-56 rounded-lg object-contain flex-shrink-0" />
           <div className="flex-1 space-y-3 text-sm">
             {/* Set */}
             <div>
@@ -76,9 +66,7 @@ export default function CardDetailsModal({
             {/* Condition */}
             <div>
               <span className="font-medium text-gray-700">Condition</span>
-              <p className="text-gray-600 mt-0.5">
-                {CONDITION_LABELS[card.condition]}
-              </p>
+              <p className="text-gray-600 mt-0.5">{CONDITION_LABELS[card.condition]}</p>
             </div>
 
             {/* Quantity */}
@@ -91,21 +79,15 @@ export default function CardDetailsModal({
             <div>
               <span className="font-medium text-gray-700">Asking Price</span>
               <p className="text-gray-600 mt-0.5">
-                {card.askingPrice != null
-                  ? `€${card.askingPrice.toFixed(2)}`
-                  : "Not listed"}
+                {card.askingPrice != null ? `€${card.askingPrice.toFixed(2)}` : "Not listed"}
               </p>
             </div>
 
             {/* Market price */}
             {card.card.priceEur != null && (
               <div>
-                <span className="font-medium text-gray-700">
-                  Market Price (€)
-                </span>
-                <p className="text-gray-600 mt-0.5">
-                  €{card.card.priceEur.toFixed(2)}
-                </p>
+                <span className="font-medium text-gray-700">Market Price (€)</span>
+                <p className="text-gray-600 mt-0.5">€{card.card.priceEur.toFixed(2)}</p>
               </div>
             )}
 
@@ -133,9 +115,7 @@ export default function CardDetailsModal({
               <div className="flex items-center gap-2 mt-0.5">
                 <span
                   className={`inline-block px-2 py-0.5 border-2 border-ink text-xs font-semibold ${
-                    card.isAvailable
-                      ? "bg-success-100 text-success-700"
-                      : "bg-ink/10 text-ink/70"
+                    card.isAvailable ? "bg-success-100 text-success-700" : "bg-ink/10 text-ink/70"
                   }`}
                 >
                   {card.isAvailable ? "Available" : "Sold"}
@@ -186,10 +166,7 @@ export default function CardDetailsModal({
                 Contact Seller
               </Link>
             )}
-            <button
-              onClick={onClose}
-              className="px-4 py-2 text-gray-600 text-sm hover:bg-gray-100"
-            >
+            <button onClick={onClose} className="px-4 py-2 text-gray-600 text-sm hover:bg-gray-100">
               Close
             </button>
           </div>

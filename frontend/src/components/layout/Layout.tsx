@@ -1,14 +1,6 @@
 import { Outlet, Link, useNavigate } from "react-router-dom";
 import { useAuthStore } from "../../store/authStore";
-import {
-  Search,
-  Message,
-  Folder,
-  User,
-  Logout,
-  Menu,
-  X,
-} from "pixelarticons/react";
+import { Search, Message, Folder, User, Logout, Menu, X } from "pixelarticons/react";
 import { useState } from "react";
 
 export default function Layout() {
@@ -32,9 +24,7 @@ export default function Layout() {
               <div className="w-8 h-8 bg-primary-600 border-2 border-ink shadow-pixel-sm flex items-center justify-center">
                 <span className="font-display text-white text-xs">T</span>
               </div>
-              <span className="font-display text-xs sm:text-sm text-ink tracking-wide">
-                Trading Post
-              </span>
+              <span className="font-display text-xs sm:text-sm text-ink tracking-wide">Trading Post</span>
             </Link>
 
             {/* Desktop Navigation */}
@@ -70,11 +60,7 @@ export default function Layout() {
                     >
                       <div className="w-8 h-8 bg-gray-200 rounded-full border-2 border-ink flex items-center justify-center overflow-hidden">
                         {user?.avatarUrl ? (
-                          <img
-                            src={user.avatarUrl}
-                            alt={user.displayName}
-                            className="w-8 h-8 rounded-full"
-                          />
+                          <img src={user.avatarUrl} alt={user.displayName} className="w-8 h-8 rounded-full" />
                         ) : (
                           <User className="w-5 h-5 text-gray-500" />
                         )}
@@ -109,15 +95,8 @@ export default function Layout() {
             </nav>
 
             {/* Mobile menu button */}
-            <button
-              className="md:hidden p-2"
-              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            >
-              {mobileMenuOpen ? (
-                <X className="w-6 h-6" />
-              ) : (
-                <Menu className="w-6 h-6" />
-              )}
+            <button className="md:hidden p-2" onClick={() => setMobileMenuOpen(!mobileMenuOpen)}>
+              {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
             </button>
           </div>
         </div>

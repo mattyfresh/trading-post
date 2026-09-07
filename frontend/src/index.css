@@ -21,11 +21,7 @@ body {
 .card-sleeve::before {
   content: "";
   @apply absolute inset-0 rounded-lg;
-  background: linear-gradient(
-    to bottom,
-    rgba(255, 255, 255, 0.3) 0%,
-    transparent 30%
-  );
+  background: linear-gradient(to bottom, rgba(255, 255, 255, 0.3) 0%, transparent 30%);
   pointer-events: none;
 }
 

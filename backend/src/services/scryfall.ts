@@ -9,7 +9,7 @@ const SCRYFALL_BASE_URL = "https://api.scryfall.com";
 const SCRYFALL_USER_AGENT = "Trading-Post-App/1.0";
 
 // Rate limiting: Scryfall asks for 50-100ms between requests
-const delay = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
+const delay = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 
 // Wrapper around fetch that attaches Scryfall's required headers.
 function scryfallFetch(path: string, init?: RequestInit): Promise<Response> {
@@ -76,10 +76,7 @@ export function getCardImageUrl(card: ScryfallCard): string {
 }
 
 // Search for cards by name
-export async function searchCards(
-  query: string,
-  page: number = 1
-): Promise<ScryfallSearchResult> {
+export async function searchCards(query: string, page: number = 1): Promise<ScryfallSearchResult> {
   await delay(100); // Rate limiting
 
   const params = new URLSearchParams({
@@ -106,9 +103,7 @@ export async function searchCards(
 }
 
 // Get a specific card by Scryfall ID
-export async function getCardById(
-  scryfallId: string
-): Promise<ScryfallCard | null> {
+export async function getCardById(scryfallId: string): Promise<ScryfallCard | null> {
   await delay(100); // Rate limiting
 
   const response = await scryfallFetch(`/cards/${scryfallId}`);
@@ -139,9 +134,7 @@ export async function autocompleteCardName(query: string): Promise<string[]> {
 }
 
 // Get all printings of a card by exact name (across all sets)
-export async function getCardPrintings(
-  name: string
-): Promise<ScryfallCard[]> {
+export async function getCardPrintings(name: string): Promise<ScryfallCard[]> {
   await delay(100); // Rate limiting
 
   // Use exact name search with unique:prints to get one result per printing

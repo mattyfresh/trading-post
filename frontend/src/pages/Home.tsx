@@ -24,8 +24,8 @@ export default function Home() {
               Trade Magic Cards in Stockholm
             </h1>
             <p className="text-xl text-primary-100 mb-8 max-w-2xl mx-auto">
-              Find the cards you need from local sellers. Browse digital
-              binders, chat with sellers, and arrange meetups to trade.
+              Find the cards you need from local sellers. Browse digital binders, chat with sellers, and arrange meetups
+              to trade.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Link
@@ -53,45 +53,30 @@ export default function Home() {
       {/* How It Works */}
       <section className="py-16 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <h2 className="font-display text-lg sm:text-xl text-ink text-center mb-12">
-            How It Works
-          </h2>
+          <h2 className="font-display text-lg sm:text-xl text-ink text-center mb-12">How It Works</h2>
           <div className="grid md:grid-cols-3 gap-8">
             <div className="text-center">
               <div className="w-16 h-16 bg-primary-100 rounded-full border-2 border-ink flex items-center justify-center mx-auto mb-4">
                 <span className="font-display text-lg text-primary-600">1</span>
               </div>
-              <h3 className="font-bold uppercase tracking-wide mb-2">
-                Create Your Binder
-              </h3>
-              <p className="text-gray-600">
-                Add cards you want to sell or trade. Set your prices and
-                conditions.
-              </p>
+              <h3 className="font-bold uppercase tracking-wide mb-2">Create Your Binder</h3>
+              <p className="text-gray-600">Add cards you want to sell or trade. Set your prices and conditions.</p>
             </div>
             <div className="text-center">
               <div className="w-16 h-16 bg-primary-100 rounded-full border-2 border-ink flex items-center justify-center mx-auto mb-4">
                 <span className="font-display text-lg text-primary-600">2</span>
               </div>
-              <h3 className="font-bold uppercase tracking-wide mb-2">
-                Browse & Search
-              </h3>
+              <h3 className="font-bold uppercase tracking-wide mb-2">Browse & Search</h3>
               <p className="text-gray-600">
-                Find cards from other sellers in Stockholm. Filter by name, set,
-                or price.
+                Find cards from other sellers in Stockholm. Filter by name, set, or price.
               </p>
             </div>
             <div className="text-center">
               <div className="w-16 h-16 bg-primary-100 rounded-full border-2 border-ink flex items-center justify-center mx-auto mb-4">
                 <span className="font-display text-lg text-primary-600">3</span>
               </div>
-              <h3 className="font-bold uppercase tracking-wide mb-2">
-                Meet & Trade
-              </h3>
-              <p className="text-gray-600">
-                Chat with sellers to arrange a meetup. Trade cards in person
-                safely.
-              </p>
+              <h3 className="font-bold uppercase tracking-wide mb-2">Meet & Trade</h3>
+              <p className="text-gray-600">Chat with sellers to arrange a meetup. Trade cards in person safely.</p>
             </div>
           </div>
         </div>
@@ -101,13 +86,8 @@ export default function Home() {
       <section className="py-16 bg-gray-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center mb-8">
-            <h2 className="font-display text-lg sm:text-xl text-ink">
-              Recently Listed
-            </h2>
-            <Link
-              to="/search"
-              className="text-primary-600 hover:text-primary-700 font-medium flex items-center"
-            >
+            <h2 className="font-display text-lg sm:text-xl text-ink">Recently Listed</h2>
+            <Link to="/search" className="text-primary-600 hover:text-primary-700 font-medium flex items-center">
               View All
               <ArrowRight className="w-4 h-4 ml-1" />
             </Link>
@@ -124,10 +104,7 @@ export default function Home() {
           ) : (
             <div className="text-center py-12 text-gray-500">
               <p>No cards listed yet. Be the first to add some!</p>
-              <Link
-                to="/register"
-                className="inline-block mt-4 text-primary-600 hover:underline"
-              >
+              <Link to="/register" className="inline-block mt-4 text-primary-600 hover:underline">
                 Create an account to start selling
               </Link>
             </div>
@@ -140,19 +117,15 @@ export default function Home() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           {isAuthenticated ? (
             <>
-              <h2 className="font-display text-lg sm:text-xl mb-4">
-                Happy trading!
-              </h2>
+              <h2 className="font-display text-lg sm:text-xl mb-4">Happy trading!</h2>
               <PixelMario />
             </>
           ) : (
             <>
-              <h2 className="font-display text-lg sm:text-xl mb-4">
-                Ready to Start Trading?
-              </h2>
+              <h2 className="font-display text-lg sm:text-xl mb-4">Ready to Start Trading?</h2>
               <p className="text-primary-100 mb-8 max-w-xl mx-auto">
-                Join the Stockholm MTG community. Create your digital binder and
-                start connecting with other players today.
+                Join the Stockholm MTG community. Create your digital binder and start connecting with other players
+                today.
               </p>
               <Link
                 to="/register"

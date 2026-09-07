@@ -2,16 +2,11 @@ import { useState, useEffect } from "react";
 import { useParams, useSearchParams, Link } from "react-router-dom";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { bindersApi } from "../services/api";
-import {
-  ChevronLeft,
-  ChevronRight,
-  Plus,
-  Message,
-} from "pixelarticons/react";
+import { ChevronLeft, ChevronRight, Plus, Message } from "pixelarticons/react";
 import BinderPage from "../components/binder/BinderPage";
 import CardDetailsModal from "../components/binder/CardDetailsModal";
 import AddCardModal from "../components/binder/AddCardModal";
-import type { BinderCard } from "../types";
+import type { BinderCard, CardCondition } from "../types";
 
 export default function BinderView() {
   const { id } = useParams<{ id: string }>();
@@ -21,9 +16,8 @@ export default function BinderView() {
   const [currentPage, setCurrentPage] = useState(1);
   const [showAddCard, setShowAddCard] = useState(false);
   const [clickedCardId, setClickedCardId] = useState<string | null>(null);
-  const [highlightedCardId, setHighlightedCardId] = useState<string | null>(
-    null,
-  );
+  const [highlightedCardId, setHighlightedCardId] = useState<string | null>(null);
+  const [handledHighlightId, setHandledHighlightId] = useState<string | null>(null);
 
   const { data, isLoading } = useQuery({
     queryKey: ["binder", id],
@@ -33,28 +27,31 @@ export default function BinderView() {
 
   const cards: BinderCard[] = data?.binder?.cards || [];
 
-  // Jump to the page containing the highlighted card and flash it
-  useEffect(() => {
-    if (!highlightId || cards.length === 0) return;
+  // Jump to the page containing the highlighted card and flash it.
+  if (highlightId !== handledHighlightId && cards.length > 0) {
+    setHandledHighlightId(highlightId);
     const target = cards.find((c: BinderCard) => c.id === highlightId);
-    if (!target) return;
-    setCurrentPage(target.pageNumber);
-    setHighlightedCardId(highlightId);
+    if (target) {
+      setCurrentPage(target.pageNumber);
+      setHighlightedCardId(highlightId);
+    }
+  }
+
+  useEffect(() => {
+    if (!highlightedCardId) return;
     const timer = setTimeout(() => setHighlightedCardId(null), 2000);
     return () => clearTimeout(timer);
-  }, [highlightId, cards.length]);
+  }, [highlightedCardId]);
 
   const toggleAvailabilityMutation = useMutation({
-    mutationFn: ({ cardId }: { cardId: string }) =>
-      bindersApi.toggleAvailability(id!, cardId),
+    mutationFn: ({ cardId }: { cardId: string }) => bindersApi.toggleAvailability(id!, cardId),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["binder", id] });
     },
   });
 
   const removeCardMutation = useMutation({
-    mutationFn: ({ cardId }: { cardId: string }) =>
-      bindersApi.removeCard(id!, cardId),
+    mutationFn: ({ cardId }: { cardId: string }) => bindersApi.removeCard(id!, cardId),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["binder", id] });
       setClickedCardId(null);
@@ -68,7 +65,7 @@ export default function BinderView() {
       condition: string;
       askingPrice: number | null;
       notes: string;
-    }) => bindersApi.addCard(id!, data as any),
+    }) => bindersApi.addCard(id!, { ...data, condition: data.condition as CardCondition }),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["binder", id] });
     },
@@ -86,10 +83,7 @@ export default function BinderView() {
     return (
       <div className="max-w-7xl mx-auto px-4 py-8 text-center">
         <h1 className="text-2xl font-bold text-gray-900">Binder not found</h1>
-        <Link
-          to="/"
-          className="text-primary-600 hover:underline mt-4 inline-block"
-        >
+        <Link to="/" className="text-primary-600 hover:underline mt-4 inline-block">
           Go back home
         </Link>
       </div>
@@ -97,14 +91,10 @@ export default function BinderView() {
   }
 
   const { binder, isOwner } = data;
-  const clickedCard = clickedCardId
-    ? (cards.find((c: BinderCard) => c.id === clickedCardId) ?? null)
-    : null;
+  const clickedCard = clickedCardId ? (cards.find((c: BinderCard) => c.id === clickedCardId) ?? null) : null;
 
   // Group cards by page
-  const pageCards = cards.filter(
-    (card: BinderCard) => card.pageNumber === currentPage,
-  );
+  const pageCards = cards.filter((card: BinderCard) => card.pageNumber === currentPage);
   const totalPages = Math.max(1, Math.ceil(cards.length / 9));
 
   return (
@@ -113,14 +103,9 @@ export default function BinderView() {
       <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-8">
         <div>
           <h1 className="font-bold text-3xl text-ink">{binder.name}</h1>
-          {binder.description && (
-            <p className="text-gray-600 mt-1">{binder.description}</p>
-          )}
+          {binder.description && <p className="text-gray-600 mt-1">{binder.description}</p>}
           <div className="flex items-center mt-2 text-sm text-gray-500">
-            <Link
-              to={`/seller/${binder.user?.id}`}
-              className="hover:text-primary-600"
-            >
+            <Link to={`/seller/${binder.user?.id}`} className="hover:text-primary-600">
               by {binder.user?.displayName}
             </Link>
             <span className="mx-2">•</span>
@@ -156,16 +141,14 @@ export default function BinderView() {
           pageNumber={currentPage}
           isOwner={isOwner}
           highlightedCardId={highlightedCardId}
-          onCardClick={card => setClickedCardId(card.id)}
-          onToggleAvailability={card =>
-            toggleAvailabilityMutation.mutate({ cardId: card.id })
-          }
+          onCardClick={(card) => setClickedCardId(card.id)}
+          onToggleAvailability={(card) => toggleAvailabilityMutation.mutate({ cardId: card.id })}
         />
 
         {/* Page Navigation */}
         <div className="flex items-center justify-center mt-6 space-x-4">
           <button
-            onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
+            onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
             disabled={currentPage === 1}
             className="p-2 border-2 border-ink shadow-pixel-sm bg-white hover:bg-cream disabled:opacity-50 disabled:cursor-not-allowed"
           >
@@ -175,7 +158,7 @@ export default function BinderView() {
             Page {currentPage} of {totalPages}
           </span>
           <button
-            onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))}
+            onClick={() => setCurrentPage((p) => Math.min(totalPages, p + 1))}
             disabled={currentPage === totalPages}
             className="p-2 border-2 border-ink shadow-pixel-sm bg-white hover:bg-cream disabled:opacity-50 disabled:cursor-not-allowed"
           >
@@ -190,10 +173,8 @@ export default function BinderView() {
           card={clickedCard}
           seller={binder.user}
           onClose={() => setClickedCardId(null)}
-          onToggleAvailability={card =>
-            toggleAvailabilityMutation.mutate({ cardId: card.id })
-          }
-          onRemove={card => removeCardMutation.mutate({ cardId: card.id })}
+          onToggleAvailability={(card) => toggleAvailabilityMutation.mutate({ cardId: card.id })}
+          onRemove={(card) => removeCardMutation.mutate({ cardId: card.id })}
         />
       )}
 
@@ -201,7 +182,9 @@ export default function BinderView() {
       {showAddCard && (
         <AddCardModal
           isPending={addCardMutation.isPending}
-          onAdd={async data => { await addCardMutation.mutateAsync(data); }}
+          onAdd={async (data) => {
+            await addCardMutation.mutateAsync(data);
+          }}
           onClose={() => setShowAddCard(false)}
         />
       )}

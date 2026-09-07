@@ -23,13 +23,7 @@ export interface Card {
   priceUpdatedAt: string | null;
 }
 
-export type CardCondition =
-  | "MINT"
-  | "NEAR_MINT"
-  | "EXCELLENT"
-  | "GOOD"
-  | "PLAYED"
-  | "POOR";
+export type CardCondition = "MINT" | "NEAR_MINT" | "EXCELLENT" | "GOOD" | "PLAYED" | "POOR";
 
 export const CONDITION_LABELS: Record<CardCondition, string> = {
   MINT: "Mint",

@@ -12,10 +12,7 @@ export function setupSocket(io: Server) {
     }
 
     try {
-      const decoded = jwt.verify(
-        token,
-        process.env.JWT_SECRET || "fallback-secret"
-      ) as JwtPayload;
+      const decoded = jwt.verify(token, process.env.JWT_SECRET || "fallback-secret") as JwtPayload;
 
       // Attach userId to socket data for use in event handlers
       socket.data.userId = decoded.userId;

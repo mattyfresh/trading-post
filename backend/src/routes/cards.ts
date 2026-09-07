@@ -23,15 +23,12 @@ router.get("/search", async (req: Request, res: Response) => {
     const result = await searchCards(q, parseInt(page as string, 10));
 
     // Transform cards to our format
-    const cards = result.data.map(card => ({
+    const cards = result.data.map((card) => ({
       scryfallId: card.id,
       name: card.name,
       setCode: card.set,
       setName: card.set_name,
-      imageUrl:
-        card.image_uris?.normal ||
-        card.card_faces?.[0]?.image_uris?.normal ||
-        "",
+      imageUrl: card.image_uris?.normal || card.card_faces?.[0]?.image_uris?.normal || "",
       manaCost: card.mana_cost,
       typeLine: card.type_line,
       rarity: card.rarity,
@@ -80,15 +77,12 @@ router.get("/printings", async (req: Request, res: Response) => {
 
     const scryfallCards = await getCardPrintings(name);
 
-    const printings = scryfallCards.map(card => ({
+    const printings = scryfallCards.map((card) => ({
       scryfallId: card.id,
       name: card.name,
       setCode: card.set,
       setName: card.set_name,
-      imageUrl:
-        card.image_uris?.normal ||
-        card.card_faces?.[0]?.image_uris?.normal ||
-        "",
+      imageUrl: card.image_uris?.normal || card.card_faces?.[0]?.image_uris?.normal || "",
       manaCost: card.mana_cost,
       typeLine: card.type_line,
       rarity: card.rarity,
@@ -115,9 +109,7 @@ router.get("/:scryfallId", async (req: Request, res: Response) => {
 
     // If not in database or price is stale (older than 24 hours), fetch from Scryfall
     const priceStaleThreshold = 24 * 60 * 60 * 1000; // 24 hours
-    const isPriceStale = card?.priceUpdatedAt
-      ? Date.now() - card.priceUpdatedAt.getTime() > priceStaleThreshold
-      : true;
+    const isPriceStale = card?.priceUpdatedAt ? Date.now() - card.priceUpdatedAt.getTime() > priceStaleThreshold : true;
 
     if (!card || isPriceStale) {
       const scryfallCard = await getCardById(scryfallId);
