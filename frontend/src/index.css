@@ -80,3 +80,60 @@ body {
 ::-webkit-scrollbar-thumb:hover {
   background-color: theme("colors.ink");
 }
+
+/* Pixel Mario (see components/PixelMario.tsx) — walking/turning/jumping is
+   driven from JS (needs randomness), only the leg-swap walk cycle and
+   Yoshi's cameo pop-in are plain CSS animations. */
+@keyframes mario-legs-a {
+  0%,
+  49.9% {
+    opacity: 1;
+  }
+  50%,
+  100% {
+    opacity: 0;
+  }
+}
+
+@keyframes mario-legs-b {
+  0%,
+  49.9% {
+    opacity: 0;
+  }
+  50%,
+  100% {
+    opacity: 1;
+  }
+}
+
+@keyframes cameo-pop {
+  0% {
+    opacity: 0;
+    transform: translateY(6px) scale(0.8);
+  }
+  15% {
+    opacity: 1;
+    transform: translateY(0) scale(1.05);
+  }
+  25% {
+    transform: translateY(0) scale(1);
+  }
+  85% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
+.animate-cameo-pop {
+  animation: cameo-pop 1.8s ease-in-out both;
+}
+
+.animate-mario-legs-a {
+  animation: mario-legs-a 0.5s steps(1, end) infinite;
+}
+
+.animate-mario-legs-b {
+  animation: mario-legs-b 0.5s steps(1, end) infinite;
+}

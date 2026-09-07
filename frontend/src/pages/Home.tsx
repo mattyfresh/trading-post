@@ -3,12 +3,16 @@ import { Link } from "react-router-dom";
 import { searchApi } from "../services/api";
 import { Search, ArrowRight } from "pixelarticons/react";
 import CardGrid from "../components/cards/CardGrid";
+import PixelMario from "../components/PixelMario";
+import { useAuthStore } from "../store/authStore";
 
 export default function Home() {
   const { data: featured, isLoading } = useQuery({
     queryKey: ["featured"],
     queryFn: searchApi.getFeatured,
   });
+
+  const { isAuthenticated } = useAuthStore();
 
   return (
     <div>
@@ -31,13 +35,16 @@ export default function Home() {
                 <Search className="w-5 h-5 mr-2" />
                 Search Cards
               </Link>
-              <Link
-                to="/register"
-                className="inline-flex items-center justify-center px-6 py-3 border-2 border-ink shadow-pixel-sm font-display text-[10px] sm:text-xs tracking-wide bg-primary-500 text-white hover:bg-primary-400 active:shadow-none active:translate-x-1 active:translate-y-1 transition-colors"
-              >
-                Start Selling
-                <ArrowRight className="w-5 h-5 ml-2" />
-              </Link>
+
+              {!isAuthenticated && (
+                <Link
+                  to="/register"
+                  className="inline-flex items-center justify-center px-6 py-3 border-2 border-ink shadow-pixel-sm font-display text-[10px] sm:text-xs tracking-wide bg-primary-500 text-white hover:bg-primary-400 active:shadow-none active:translate-x-1 active:translate-y-1 transition-colors"
+                >
+                  Start Selling
+                  <ArrowRight className="w-5 h-5 ml-2" />
+                </Link>
+              )}
             </div>
           </div>
         </div>
@@ -131,20 +138,31 @@ export default function Home() {
       {/* CTA Section */}
       <section className="py-16 bg-primary-600 text-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h2 className="font-display text-lg sm:text-xl mb-4">
-            Ready to Start Trading?
-          </h2>
-          <p className="text-primary-100 mb-8 max-w-xl mx-auto">
-            Join the Stockholm MTG community. Create your digital binder and
-            start connecting with other players today.
-          </p>
-          <Link
-            to="/register"
-            className="inline-flex items-center px-8 py-3 border-2 border-ink shadow-pixel-sm font-display text-[10px] sm:text-xs tracking-wide bg-white text-primary-600 hover:bg-gray-100 active:shadow-none active:translate-x-1 active:translate-y-1 transition-colors"
-          >
-            Get Started Free
-            <ArrowRight className="w-5 h-5 ml-2" />
-          </Link>
+          {isAuthenticated ? (
+            <>
+              <h2 className="font-display text-lg sm:text-xl mb-4">
+                Happy trading!
+              </h2>
+              <PixelMario />
+            </>
+          ) : (
+            <>
+              <h2 className="font-display text-lg sm:text-xl mb-4">
+                Ready to Start Trading?
+              </h2>
+              <p className="text-primary-100 mb-8 max-w-xl mx-auto">
+                Join the Stockholm MTG community. Create your digital binder and
+                start connecting with other players today.
+              </p>
+              <Link
+                to="/register"
+                className="inline-flex items-center px-8 py-3 border-2 border-ink shadow-pixel-sm font-display text-[10px] sm:text-xs tracking-wide bg-white text-primary-600 hover:bg-gray-100 active:shadow-none active:translate-x-1 active:translate-y-1 transition-colors"
+              >
+                Get Started Free
+                <ArrowRight className="w-5 h-5 ml-2" />
+              </Link>
+            </>
+          )}
         </div>
       </section>
     </div>
