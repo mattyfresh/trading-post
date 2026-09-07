@@ -75,9 +75,9 @@ importers:
       axios:
         specifier: ^1.6.2
         version: 1.13.2
-      lucide-react:
-        specifier: ^0.303.0
-        version: 0.303.0(react@18.3.1)
+      pixelarticons:
+        specifier: ^2.4.1
+        version: 2.4.1(react@18.3.1)
       react:
         specifier: ^18.2.0
         version: 18.3.1
@@ -1469,11 +1469,6 @@ packages:
   lru-cache@5.1.1:
     resolution: {integrity: sha512-KpNARQA3Iwv+jTA0utUVVbrh+Jlrr1Fv0e56GGzAFOXN7dk/FviaDW8LHmK52DlcH4WP2n6gI8vN1aesBFgo9w==}
 
-  lucide-react@0.303.0:
-    resolution: {integrity: sha512-B0B9T3dLEFBYPCUlnUS1mvAhW1craSbF9HO+JfBjAtpFUJ7gMIqmEwNSclikY3RiN2OnCkj/V1ReAQpaHae8Bg==}
-    peerDependencies:
-      react: ^16.5.1 || ^17.0.0 || ^18.0.0
-
   math-intrinsics@1.1.0:
     resolution: {integrity: sha512-/IXtbwEk5HTPyEwyKX6hGkYXxM9nbj64B+ilVJnC/R6B0pH5G4V3b0pVbL7DBj4tkhBAppbQUlf6F6Xl9LHu1g==}
     engines: {node: '>= 0.4'}
@@ -1616,6 +1611,12 @@ packages:
   pirates@4.0.7:
     resolution: {integrity: sha512-TfySrs/5nm8fQJDcBDuUng3VOUKsd7S+zqvbOTiGXHfxX4wK31ard+hoNuvkicM/2YFzlpDgABOevKSsB4G/FA==}
     engines: {node: '>= 6'}
+
+  pixelarticons@2.4.1:
+    resolution: {integrity: sha512-NIiwuEmBrFT6YG5PdMnOPRsGm0rbz4TiH0P5sgftjrQugxgdF+xtZPgGrgAOL76KUMJ04kk5Bq2lVLnmBg7IPw==}
+    hasBin: true
+    peerDependencies:
+      react: '>=16'
 
   postcss-import@15.1.0:
     resolution: {integrity: sha512-hpr+J05B2FVYUAXHeK1YyI267J/dDDhMU6B6civm8hSY1jYJnBXxzKDKDswzJmtLHryrjhnDjqqp/49t8FALew==}
@@ -3378,10 +3379,6 @@ snapshots:
     dependencies:
       yallist: 3.1.1
 
-  lucide-react@0.303.0(react@18.3.1):
-    dependencies:
-      react: 18.3.1
-
   math-intrinsics@1.1.0: {}
 
   media-typer@0.3.0: {}
@@ -3485,6 +3482,10 @@ snapshots:
   pify@2.3.0: {}
 
   pirates@4.0.7: {}
+
+  pixelarticons@2.4.1(react@18.3.1):
+    dependencies:
+      react: 18.3.1
 
   postcss-import@15.1.0(postcss@8.5.6):
     dependencies:

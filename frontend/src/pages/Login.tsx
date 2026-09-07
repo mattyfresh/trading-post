@@ -29,7 +29,9 @@ export default function Login() {
     <div className="min-h-[80vh] flex items-center justify-center px-4">
       <div className="max-w-md w-full">
         <div className="text-center mb-8">
-          <h1 className="text-3xl font-bold text-gray-900">Welcome Back</h1>
+          <h1 className="font-display text-xl sm:text-2xl text-ink">
+            Welcome Back
+          </h1>
           <p className="text-gray-600 mt-2">
             Sign in to your Trading Post account
           </p>
@@ -37,10 +39,10 @@ export default function Login() {
 
         <form
           onSubmit={handleSubmit}
-          className="bg-white p-8 rounded-lg shadow-md"
+          className="bg-white p-8 border-4 border-ink shadow-pixel"
         >
           {error && (
-            <div className="mb-4 p-3 bg-red-50 border border-red-200 text-red-600 rounded-lg text-sm">
+            <div className="mb-4 p-3 bg-danger-100 border-2 border-danger text-danger-700 text-sm">
               {error}
             </div>
           )}
@@ -57,7 +59,7 @@ export default function Login() {
               id="email"
               value={email}
               onChange={e => setEmail(e.target.value)}
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+              className="w-full px-4 py-2 border-2 border-ink focus:ring-2 focus:ring-primary-500 focus:border-transparent"
               placeholder="you@example.com"
               required
             />
@@ -75,7 +77,7 @@ export default function Login() {
               id="password"
               value={password}
               onChange={e => setPassword(e.target.value)}
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+              className="w-full px-4 py-2 border-2 border-ink focus:ring-2 focus:ring-primary-500 focus:border-transparent"
               placeholder="••••••••"
               required
             />
@@ -84,7 +86,7 @@ export default function Login() {
           <button
             type="submit"
             disabled={isLoading}
-            className="w-full bg-primary-600 text-white py-2 px-4 rounded-lg font-medium hover:bg-primary-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+            className="w-full border-2 border-ink shadow-pixel-sm bg-primary-600 text-white py-2 px-4 font-display text-[10px] tracking-wide hover:bg-primary-700 active:shadow-none active:translate-x-1 active:translate-y-1 transition-colors disabled:opacity-50 disabled:cursor-not-allowed disabled:active:shadow-pixel-sm disabled:active:translate-x-0 disabled:active:translate-y-0"
           >
             {isLoading ? "Signing in..." : "Sign In"}
           </button>

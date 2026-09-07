@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
-import { X, MessageCircle, Trash2 } from "lucide-react";
+import { X, Message, Trash } from "pixelarticons/react";
 import type { BinderCard, User } from "../../types";
 import { CONDITION_LABELS } from "../../types";
 import { useAuthStore } from "../../store/authStore";
@@ -29,15 +29,16 @@ export default function CardDetailsModal({
       onClick={onClose}
     >
       <div
-        className="bg-white rounded-lg p-6 w-full max-w-2xl shadow-xl"
+        className="bg-white border-4 border-ink shadow-pixel-lg p-6 w-full max-w-2xl"
         onClick={e => e.stopPropagation()}
       >
         {/* Header */}
         <div className="flex items-start justify-between mb-4">
-          <h2 className="text-xl font-bold text-gray-900">{card.card.name}</h2>
+          {/* Card name is dynamic Scryfall data — keep font-sans, just bolder */}
+          <h2 className="font-bold text-xl text-ink">{card.card.name}</h2>
           <button
             onClick={onClose}
-            className="p-1 rounded hover:bg-gray-100 text-gray-500"
+            className="p-1 hover:bg-gray-100 text-gray-500"
           >
             <X className="w-5 h-5" />
           </button>
@@ -131,10 +132,10 @@ export default function CardDetailsModal({
               </div>
               <div className="flex items-center gap-2 mt-0.5">
                 <span
-                  className={`inline-block px-2 py-0.5 rounded text-xs font-semibold ${
+                  className={`inline-block px-2 py-0.5 border-2 border-ink text-xs font-semibold ${
                     card.isAvailable
-                      ? "bg-green-100 text-green-700"
-                      : "bg-gray-100 text-gray-500"
+                      ? "bg-success-100 text-success-700"
+                      : "bg-ink/10 text-ink/70"
                   }`}
                 >
                   {card.isAvailable ? "Available" : "Sold"}
@@ -152,13 +153,13 @@ export default function CardDetailsModal({
                 <span className="text-sm text-gray-600">Remove this card permanently?</span>
                 <button
                   onClick={() => onRemove?.(card)}
-                  className="px-3 py-1.5 bg-red-600 text-white text-sm rounded-lg hover:bg-red-700"
+                  className="px-3 py-1.5 border-2 border-ink shadow-pixel-sm bg-danger text-white text-sm hover:bg-danger-700 active:shadow-none active:translate-x-1 active:translate-y-1"
                 >
                   Yes, remove
                 </button>
                 <button
                   onClick={() => setConfirmDelete(false)}
-                  className="px-3 py-1.5 text-sm text-gray-600 hover:bg-gray-100 rounded-lg"
+                  className="px-3 py-1.5 text-sm text-gray-600 hover:bg-gray-100"
                 >
                   Cancel
                 </button>
@@ -166,9 +167,9 @@ export default function CardDetailsModal({
             ) : (
               <button
                 onClick={() => setConfirmDelete(true)}
-                className="flex items-center gap-1.5 text-sm text-red-500 hover:text-red-700"
+                className="flex items-center gap-1.5 text-sm text-danger hover:text-danger-700"
               >
-                <Trash2 className="w-4 h-4" />
+                <Trash className="w-4 h-4" />
                 Remove from binder
               </button>
             )
@@ -179,15 +180,15 @@ export default function CardDetailsModal({
             {!isOwner && seller && (
               <Link
                 to={`/messages?seller=${seller.id}`}
-                className="flex items-center px-4 py-2 bg-primary-600 text-white rounded-lg hover:bg-primary-700 text-sm"
+                className="flex items-center px-4 py-2 border-2 border-ink shadow-pixel-sm font-display text-[10px] tracking-wide bg-primary-600 text-white hover:bg-primary-700 active:shadow-none active:translate-x-1 active:translate-y-1"
               >
-                <MessageCircle className="w-4 h-4 mr-2" />
+                <Message className="w-4 h-4 mr-2" />
                 Contact Seller
               </Link>
             )}
             <button
               onClick={onClose}
-              className="px-4 py-2 text-gray-600 text-sm hover:bg-gray-100 rounded-lg"
+              className="px-4 py-2 text-gray-600 text-sm hover:bg-gray-100"
             >
               Close
             </button>

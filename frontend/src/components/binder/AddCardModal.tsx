@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Loader2, CheckCircle } from "lucide-react";
+import { Loader, Check } from "pixelarticons/react";
 import { cardsApi } from "../../services/api";
 import { useDebounce } from "../../hooks/useDebounce";
 import type { ScryfallCard } from "../../types";
@@ -92,8 +92,10 @@ export default function AddCardModal({
 
   return (
     <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
-      <div className="bg-white rounded-lg p-6 w-full max-w-2xl max-h-[90vh] overflow-y-auto">
-        <h2 className="text-xl font-bold mb-4">Add Card to Binder</h2>
+      <div className="bg-white border-4 border-ink shadow-pixel-lg p-6 w-full max-w-2xl max-h-[90vh] overflow-y-auto">
+        <h2 className="font-display text-base sm:text-lg text-ink mb-4">
+          Add Card to Binder
+        </h2>
 
         {/* Search */}
         <div className="relative mb-4">
@@ -105,19 +107,19 @@ export default function AddCardModal({
               if (justAdded) setJustAdded(false);
             }}
             placeholder="Search for a card..."
-            className="w-full px-4 py-2 pr-10 border border-gray-300 rounded-lg"
+            className="w-full px-4 py-2 pr-10 border-2 border-ink"
           />
           {isSearching && (
             <div className="absolute right-3 top-1/2 -translate-y-1/2 text-primary-600">
-              <Loader2 className="w-5 h-5 animate-spin" />
+              <Loader className="w-5 h-5 animate-spin" />
             </div>
           )}
         </div>
 
         {/* Added confirmation */}
         {justAdded && (
-          <div className="flex items-center gap-2 mb-4 px-3 py-2 bg-green-50 border border-green-200 rounded-lg text-green-700 text-sm">
-            <CheckCircle className="w-4 h-4 flex-shrink-0" />
+          <div className="flex items-center gap-2 mb-4 px-3 py-2 bg-success-100 border-2 border-success text-success-700 text-sm">
+            <Check className="w-4 h-4 flex-shrink-0" />
             Card added! Search for another card to keep adding.
           </div>
         )}
@@ -175,12 +177,12 @@ export default function AddCardModal({
                   </label>
                   {isFetchingPrintings ? (
                     <div className="flex items-center space-x-2 text-sm text-gray-500">
-                      <Loader2 className="w-4 h-4 animate-spin" />
+                      <Loader className="w-4 h-4 animate-spin" />
                       <span>Loading printings…</span>
                     </div>
                   ) : (
                     <select
-                      className="w-full px-3 py-1 border rounded text-sm"
+                      className="w-full px-3 py-1 border-2 border-ink text-sm"
                       value={activePrinting.scryfallId}
                       onChange={e => {
                         const printing = printings.find(
@@ -214,7 +216,7 @@ export default function AddCardModal({
                       defaultValue={1}
                       min={1}
                       max={99}
-                      className="w-full px-3 py-1 border rounded"
+                      className="w-full px-3 py-1 border-2 border-ink"
                     />
                   </div>
                   <div>
@@ -224,7 +226,7 @@ export default function AddCardModal({
                     <select
                       name="condition"
                       defaultValue="NEAR_MINT"
-                      className="w-full px-3 py-1 border rounded"
+                      className="w-full px-3 py-1 border-2 border-ink"
                     >
                       <option value="MINT">Mint</option>
                       <option value="NEAR_MINT">Near Mint</option>
@@ -257,7 +259,7 @@ export default function AddCardModal({
                     step="0.01"
                     min="0"
                     placeholder="Leave empty for no price"
-                    className="w-full px-3 py-1 border rounded"
+                    className="w-full px-3 py-1 border-2 border-ink"
                     value={askingPrice}
                     onChange={e => setAskingPrice(e.target.value)}
                   />
@@ -271,14 +273,14 @@ export default function AddCardModal({
                 onClick={() => {
                   resetToSearch(false);
                 }}
-                className="px-4 py-2 text-gray-600"
+                className="px-4 py-2 font-bold uppercase tracking-wide text-xs text-ink"
               >
                 Back
               </button>
               <button
                 type="submit"
                 disabled={isPending}
-                className="px-4 py-2 bg-primary-600 text-white rounded-lg hover:bg-primary-700 disabled:opacity-50"
+                className="px-4 py-2 border-2 border-ink shadow-pixel-sm font-display text-[10px] tracking-wide bg-primary-600 text-white hover:bg-primary-700 active:shadow-none active:translate-x-1 active:translate-y-1 disabled:opacity-50 disabled:active:shadow-pixel-sm disabled:active:translate-x-0 disabled:active:translate-y-0"
               >
                 {isPending ? "Adding..." : "Add to Binder"}
               </button>
@@ -288,7 +290,10 @@ export default function AddCardModal({
 
         {!selectedCard && (
           <div className="flex justify-end">
-            <button onClick={onClose} className="px-4 py-2 text-gray-600">
+            <button
+              onClick={onClose}
+              className="px-4 py-2 font-bold uppercase tracking-wide text-xs text-ink"
+            >
               Cancel
             </button>
           </div>

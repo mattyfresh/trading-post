@@ -2,7 +2,12 @@ import { useState, useEffect } from "react";
 import { useParams, useSearchParams, Link } from "react-router-dom";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { bindersApi } from "../services/api";
-import { ChevronLeft, ChevronRight, Plus, MessageCircle } from "lucide-react";
+import {
+  ChevronLeft,
+  ChevronRight,
+  Plus,
+  Message,
+} from "pixelarticons/react";
 import BinderPage from "../components/binder/BinderPage";
 import CardDetailsModal from "../components/binder/CardDetailsModal";
 import AddCardModal from "../components/binder/AddCardModal";
@@ -107,7 +112,7 @@ export default function BinderView() {
       {/* Header */}
       <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-8">
         <div>
-          <h1 className="text-3xl font-bold text-gray-900">{binder.name}</h1>
+          <h1 className="font-bold text-3xl text-ink">{binder.name}</h1>
           {binder.description && (
             <p className="text-gray-600 mt-1">{binder.description}</p>
           )}
@@ -126,7 +131,7 @@ export default function BinderView() {
           {isOwner && (
             <button
               onClick={() => setShowAddCard(true)}
-              className="flex items-center px-4 py-2 bg-primary-600 text-white rounded-lg hover:bg-primary-700"
+              className="flex items-center px-4 py-2 border-2 border-ink shadow-pixel-sm font-display text-[10px] tracking-wide bg-primary-600 text-white hover:bg-primary-700 active:shadow-none active:translate-x-1 active:translate-y-1"
             >
               <Plus className="w-5 h-5 mr-2" />
               Add Card
@@ -135,9 +140,9 @@ export default function BinderView() {
           {!isOwner && binder.user && (
             <Link
               to={`/messages?seller=${binder.user.id}`}
-              className="flex items-center px-4 py-2 bg-primary-600 text-white rounded-lg hover:bg-primary-700"
+              className="flex items-center px-4 py-2 border-2 border-ink shadow-pixel-sm font-display text-[10px] tracking-wide bg-primary-600 text-white hover:bg-primary-700 active:shadow-none active:translate-x-1 active:translate-y-1"
             >
-              <MessageCircle className="w-5 h-5 mr-2" />
+              <Message className="w-5 h-5 mr-2" />
               Contact Seller
             </Link>
           )}
@@ -145,7 +150,7 @@ export default function BinderView() {
       </div>
 
       {/* Binder */}
-      <div className="bg-slate-200 rounded-xl p-6 shadow-lg">
+      <div className="bg-binder-page border-4 border-ink shadow-pixel p-6">
         <BinderPage
           cards={pageCards}
           pageNumber={currentPage}
@@ -162,7 +167,7 @@ export default function BinderView() {
           <button
             onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
             disabled={currentPage === 1}
-            className="p-2 rounded-lg bg-white shadow hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
+            className="p-2 border-2 border-ink shadow-pixel-sm bg-white hover:bg-cream disabled:opacity-50 disabled:cursor-not-allowed"
           >
             <ChevronLeft className="w-6 h-6" />
           </button>
@@ -172,7 +177,7 @@ export default function BinderView() {
           <button
             onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))}
             disabled={currentPage === totalPages}
-            className="p-2 rounded-lg bg-white shadow hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
+            className="p-2 border-2 border-ink shadow-pixel-sm bg-white hover:bg-cream disabled:opacity-50 disabled:cursor-not-allowed"
           >
             <ChevronRight className="w-6 h-6" />
           </button>

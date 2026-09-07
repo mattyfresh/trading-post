@@ -2,13 +2,13 @@ import { Outlet, Link, useNavigate } from "react-router-dom";
 import { useAuthStore } from "../../store/authStore";
 import {
   Search,
-  MessageCircle,
-  BookUser,
+  Message,
+  Folder,
   User,
-  LogOut,
+  Logout,
   Menu,
   X,
-} from "lucide-react";
+} from "pixelarticons/react";
 import { useState } from "react";
 
 export default function Layout() {
@@ -22,17 +22,17 @@ export default function Layout() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-cream">
       {/* Header */}
-      <header className="bg-white shadow-sm sticky top-0 z-50">
+      <header className="bg-white border-b-4 border-ink sticky top-0 z-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-16">
             {/* Logo */}
             <Link to="/" className="flex items-center space-x-2">
-              <div className="w-8 h-8 bg-primary-600 rounded-lg flex items-center justify-center">
-                <span className="text-white font-bold text-lg">T</span>
+              <div className="w-8 h-8 bg-primary-600 border-2 border-ink shadow-pixel-sm flex items-center justify-center">
+                <span className="font-display text-white text-xs">T</span>
               </div>
-              <span className="font-bold text-xl text-gray-900">
+              <span className="font-display text-xs sm:text-sm text-ink tracking-wide">
                 Trading Post
               </span>
             </Link>
@@ -41,7 +41,7 @@ export default function Layout() {
             <nav className="hidden md:flex items-center space-x-6">
               <Link
                 to="/search"
-                className="flex items-center space-x-1 text-gray-600 hover:text-primary-600 transition-colors"
+                className="flex items-center space-x-1 font-bold uppercase tracking-wide text-xs text-ink hover:text-primary-600 transition-colors"
               >
                 <Search className="w-5 h-5" />
                 <span>Search cards or sellers</span>
@@ -51,24 +51,24 @@ export default function Layout() {
                 <>
                   <Link
                     to="/dashboard"
-                    className="flex items-center space-x-1 text-gray-600 hover:text-primary-600 transition-colors"
+                    className="flex items-center space-x-1 font-bold uppercase tracking-wide text-xs text-ink hover:text-primary-600 transition-colors"
                   >
-                    <BookUser className="w-5 h-5" />
+                    <Folder className="w-5 h-5" />
                     <span>My binders</span>
                   </Link>
                   <Link
                     to="/messages"
-                    className="flex items-center space-x-1 text-gray-600 hover:text-primary-600 transition-colors"
+                    className="flex items-center space-x-1 font-bold uppercase tracking-wide text-xs text-ink hover:text-primary-600 transition-colors"
                   >
-                    <MessageCircle className="w-5 h-5" />
+                    <Message className="w-5 h-5" />
                     <span>Messages</span>
                   </Link>
                   <div className="flex items-center space-x-4">
                     <Link
                       to="/dashboard"
-                      className="flex items-center space-x-2 text-gray-600 hover:text-primary-600 transition-colors"
+                      className="flex items-center space-x-2 text-ink hover:text-primary-600 transition-colors"
                     >
-                      <div className="w-8 h-8 bg-gray-200 rounded-full flex items-center justify-center">
+                      <div className="w-8 h-8 bg-gray-200 rounded-full border-2 border-ink flex items-center justify-center overflow-hidden">
                         {user?.avatarUrl ? (
                           <img
                             src={user.avatarUrl}
@@ -83,10 +83,10 @@ export default function Layout() {
                     </Link>
                     <button
                       onClick={handleLogout}
-                      className="text-gray-500 hover:text-red-600 transition-colors"
+                      className="text-ink hover:text-danger transition-colors"
                       title="Logout"
                     >
-                      <LogOut className="w-5 h-5" />
+                      <Logout className="w-5 h-5" />
                     </button>
                   </div>
                 </>
@@ -94,13 +94,13 @@ export default function Layout() {
                 <div className="flex items-center space-x-4">
                   <Link
                     to="/login"
-                    className="text-gray-600 hover:text-primary-600 transition-colors"
+                    className="font-bold uppercase tracking-wide text-xs text-ink hover:text-primary-600 transition-colors"
                   >
                     Login
                   </Link>
                   <Link
                     to="/register"
-                    className="bg-primary-600 text-white px-4 py-2 rounded-lg hover:bg-primary-700 transition-colors"
+                    className="font-display text-[10px] tracking-wide bg-primary-600 text-white px-4 py-2 border-2 border-ink shadow-pixel-sm hover:bg-primary-700 active:shadow-none active:translate-x-1 active:translate-y-1 transition-colors"
                   >
                     Sign Up
                   </Link>
@@ -124,11 +124,11 @@ export default function Layout() {
 
         {/* Mobile Navigation */}
         {mobileMenuOpen && (
-          <div className="md:hidden border-t bg-white">
+          <div className="md:hidden border-t-4 border-ink bg-white">
             <div className="px-4 py-4 space-y-4">
               <Link
                 to="/search"
-                className="flex items-center space-x-2 text-gray-600"
+                className="flex items-center space-x-2 font-bold uppercase tracking-wide text-xs text-ink"
                 onClick={() => setMobileMenuOpen(false)}
               >
                 <Search className="w-5 h-5" />
@@ -139,18 +139,18 @@ export default function Layout() {
                 <>
                   <Link
                     to="/dashboard"
-                    className="block text-gray-600"
+                    className="flex items-center space-x-2 font-bold uppercase tracking-wide text-xs text-ink"
                     onClick={() => setMobileMenuOpen(false)}
                   >
-                    <BookUser className="w-5 h-5" />
+                    <Folder className="w-5 h-5" />
                     <span>My binders</span>
                   </Link>
                   <Link
                     to="/messages"
-                    className="flex items-center space-x-2 text-gray-600"
+                    className="flex items-center space-x-2 font-bold uppercase tracking-wide text-xs text-ink"
                     onClick={() => setMobileMenuOpen(false)}
                   >
-                    <MessageCircle className="w-5 h-5" />
+                    <Message className="w-5 h-5" />
                     <span>Messages</span>
                   </Link>
                   <button
@@ -158,9 +158,9 @@ export default function Layout() {
                       handleLogout();
                       setMobileMenuOpen(false);
                     }}
-                    className="flex items-center space-x-2 text-red-600"
+                    className="flex items-center space-x-2 font-bold uppercase tracking-wide text-xs text-danger"
                   >
-                    <LogOut className="w-5 h-5" />
+                    <Logout className="w-5 h-5" />
                     <span>Logout</span>
                   </button>
                 </>
@@ -168,14 +168,14 @@ export default function Layout() {
                 <>
                   <Link
                     to="/login"
-                    className="block text-gray-600"
+                    className="block font-bold uppercase tracking-wide text-xs text-ink"
                     onClick={() => setMobileMenuOpen(false)}
                   >
                     Login
                   </Link>
                   <Link
                     to="/register"
-                    className="block bg-primary-600 text-white px-4 py-2 rounded-lg text-center"
+                    className="block font-display text-[10px] tracking-wide bg-primary-600 text-white px-4 py-2 border-2 border-ink shadow-pixel-sm text-center"
                     onClick={() => setMobileMenuOpen(false)}
                   >
                     Sign Up
@@ -193,7 +193,7 @@ export default function Layout() {
       </main>
 
       {/* Footer */}
-      <footer className="bg-white border-t mt-auto">
+      <footer className="bg-white border-t-4 border-ink mt-auto">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
           <div className="text-center text-gray-500 text-sm">
             <p>Trading Post - MTG Card Marketplace for Stockholm</p>

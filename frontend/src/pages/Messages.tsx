@@ -4,7 +4,7 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { conversationsApi, usersApi } from "../services/api";
 import { useAuthStore } from "../store/authStore";
 import { socket } from "../services/socket";
-import { Send, MessageCircle } from "lucide-react";
+import { Send, Message as MessageIcon } from "pixelarticons/react";
 import type { Conversation, Message } from "../types";
 
 export default function Messages() {
@@ -157,10 +157,12 @@ export default function Messages() {
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-      <h1 className="text-3xl font-bold text-gray-900 mb-8">Messages</h1>
+      <h1 className="font-display text-lg sm:text-xl text-ink mb-8">
+        Messages
+      </h1>
 
       <div
-        className="bg-white rounded-lg shadow-md overflow-hidden"
+        className="bg-white border-2 border-ink shadow-pixel-sm overflow-hidden"
         style={{ height: "70vh" }}
       >
         <div className="flex h-full">
@@ -213,7 +215,7 @@ export default function Messages() {
               })
             ) : (
               <div className="p-8 text-center text-gray-500">
-                <MessageCircle className="w-12 h-12 mx-auto mb-4 text-gray-300" />
+                <MessageIcon className="w-12 h-12 mx-auto mb-4 text-gray-300" />
                 <p>No conversations yet</p>
                 <p className="text-sm mt-2">
                   Start a conversation by contacting a seller
@@ -248,7 +250,7 @@ export default function Messages() {
                       value={composeMessage}
                       onChange={e => setComposeMessage(e.target.value)}
                       placeholder={`Message ${composeSeller?.displayName ?? "seller"}…`}
-                      className="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500"
+                      className="flex-1 px-4 py-2 border-2 border-ink focus:ring-2 focus:ring-primary-500"
                       autoFocus
                     />
                     <button
@@ -257,7 +259,7 @@ export default function Messages() {
                         !composeMessage.trim() ||
                         createConversationMutation.isPending
                       }
-                      className="px-4 py-2 bg-primary-600 text-white rounded-lg hover:bg-primary-700 disabled:opacity-50"
+                      className="px-4 py-2 border-2 border-ink shadow-pixel-sm bg-primary-600 text-white hover:bg-primary-700 active:shadow-none active:translate-x-1 active:translate-y-1 disabled:opacity-50 disabled:active:shadow-pixel-sm disabled:active:translate-x-0 disabled:active:translate-y-0"
                     >
                       <Send className="w-5 h-5" />
                     </button>
@@ -315,14 +317,14 @@ export default function Messages() {
                       value={newMessage}
                       onChange={e => setNewMessage(e.target.value)}
                       placeholder="Type a message..."
-                      className="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500"
+                      className="flex-1 px-4 py-2 border-2 border-ink focus:ring-2 focus:ring-primary-500"
                     />
                     <button
                       type="submit"
                       disabled={
                         !newMessage.trim() || sendMessageMutation.isPending
                       }
-                      className="px-4 py-2 bg-primary-600 text-white rounded-lg hover:bg-primary-700 disabled:opacity-50"
+                      className="px-4 py-2 border-2 border-ink shadow-pixel-sm bg-primary-600 text-white hover:bg-primary-700 active:shadow-none active:translate-x-1 active:translate-y-1 disabled:opacity-50 disabled:active:shadow-pixel-sm disabled:active:translate-x-0 disabled:active:translate-y-0"
                     >
                       <Send className="w-5 h-5" />
                     </button>
@@ -332,7 +334,7 @@ export default function Messages() {
             ) : (
               <div className="flex-1 flex items-center justify-center text-gray-500">
                 <div className="text-center">
-                  <MessageCircle className="w-16 h-16 mx-auto mb-4 text-gray-300" />
+                  <MessageIcon className="w-16 h-16 mx-auto mb-4 text-gray-300" />
                   <p>Select a conversation to view messages</p>
                 </div>
               </div>

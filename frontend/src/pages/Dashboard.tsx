@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Link } from "react-router-dom";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { bindersApi } from "../services/api";
-import { Plus, Folder, Trash2, Edit } from "lucide-react";
+import { Plus, Folder, Trash, Pencil } from "pixelarticons/react";
 import type { Binder } from "../types";
 
 export default function Dashboard() {
@@ -49,10 +49,12 @@ export default function Dashboard() {
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
       <div className="flex justify-between items-center mb-8">
-        <h1 className="text-3xl font-bold text-gray-900">My binders</h1>
+        <h1 className="font-display text-lg sm:text-xl text-ink">
+          My binders
+        </h1>
         <button
           onClick={() => setShowCreateModal(true)}
-          className="flex items-center px-4 py-2 bg-primary-600 text-white rounded-lg hover:bg-primary-700 transition-colors"
+          className="flex items-center px-4 py-2 border-2 border-ink shadow-pixel-sm font-display text-[10px] tracking-wide bg-primary-600 text-white hover:bg-primary-700 active:shadow-none active:translate-x-1 active:translate-y-1 transition-colors"
         >
           <Plus className="w-5 h-5 mr-2" />
           New Binder
@@ -70,7 +72,7 @@ export default function Dashboard() {
           {binders.map((binder: Binder) => (
             <div
               key={binder.id}
-              className="bg-white rounded-lg shadow-md p-6 hover:shadow-lg transition-shadow"
+              className="bg-white border-2 border-ink shadow-pixel-sm p-6 hover:shadow-pixel transition-shadow"
             >
               <div className="flex items-start justify-between">
                 <div className="flex items-center">
@@ -90,7 +92,7 @@ export default function Dashboard() {
                     className="p-2 text-gray-400 hover:text-primary-600 transition-colors"
                     title="Edit"
                   >
-                    <Edit className="w-5 h-5" />
+                    <Pencil className="w-5 h-5" />
                   </Link>
                   <button
                     onClick={() => {
@@ -100,10 +102,10 @@ export default function Dashboard() {
                         deleteMutation.mutate(binder.id);
                       }
                     }}
-                    className="p-2 text-gray-400 hover:text-red-600 transition-colors"
+                    className="p-2 text-gray-400 hover:text-danger transition-colors"
                     title="Delete"
                   >
-                    <Trash2 className="w-5 h-5" />
+                    <Trash className="w-5 h-5" />
                   </button>
                 </div>
               </div>
@@ -132,7 +134,7 @@ export default function Dashboard() {
           </p>
           <button
             onClick={() => setShowCreateModal(true)}
-            className="inline-flex items-center px-4 py-2 bg-primary-600 text-white rounded-lg hover:bg-primary-700"
+            className="inline-flex items-center px-4 py-2 border-2 border-ink shadow-pixel-sm font-display text-[10px] tracking-wide bg-primary-600 text-white hover:bg-primary-700 active:shadow-none active:translate-x-1 active:translate-y-1"
           >
             <Plus className="w-5 h-5 mr-2" />
             Create Binder
@@ -143,8 +145,10 @@ export default function Dashboard() {
       {/* Create Binder Modal */}
       {showCreateModal && (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
-          <div className="bg-white rounded-lg p-6 w-full max-w-md mx-4">
-            <h2 className="text-xl font-bold mb-4">Create New Binder</h2>
+          <div className="bg-white border-4 border-ink shadow-pixel-lg p-6 w-full max-w-md mx-4">
+            <h2 className="font-display text-base sm:text-lg text-ink mb-4">
+              Create New Binder
+            </h2>
             <form onSubmit={handleCreateBinder}>
               <div className="mb-4">
                 <label className="block text-sm font-medium text-gray-700 mb-1">
@@ -154,7 +158,7 @@ export default function Dashboard() {
                   type="text"
                   value={newBinderName}
                   onChange={e => setNewBinderName(e.target.value)}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500"
+                  className="w-full px-4 py-2 border-2 border-ink focus:ring-2 focus:ring-primary-500"
                   placeholder="My Trade Binder"
                   required
                 />
@@ -166,7 +170,7 @@ export default function Dashboard() {
                 <textarea
                   value={newBinderDescription}
                   onChange={e => setNewBinderDescription(e.target.value)}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500"
+                  className="w-full px-4 py-2 border-2 border-ink focus:ring-2 focus:ring-primary-500"
                   placeholder="Cards I'm looking to trade or sell"
                   rows={3}
                 />
@@ -175,14 +179,14 @@ export default function Dashboard() {
                 <button
                   type="button"
                   onClick={() => setShowCreateModal(false)}
-                  className="px-4 py-2 text-gray-600 hover:text-gray-800"
+                  className="px-4 py-2 font-bold uppercase tracking-wide text-xs text-ink hover:text-gray-600"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
                   disabled={createMutation.isPending}
-                  className="px-4 py-2 bg-primary-600 text-white rounded-lg hover:bg-primary-700 disabled:opacity-50"
+                  className="px-4 py-2 border-2 border-ink shadow-pixel-sm font-display text-[10px] tracking-wide bg-primary-600 text-white hover:bg-primary-700 active:shadow-none active:translate-x-1 active:translate-y-1 disabled:opacity-50 disabled:active:shadow-pixel-sm disabled:active:translate-x-0 disabled:active:translate-y-0"
                 >
                   {createMutation.isPending ? "Creating..." : "Create Binder"}
                 </button>

@@ -4,12 +4,12 @@
 
 /* Custom styles */
 body {
-  @apply bg-gray-50 text-gray-900 antialiased;
+  @apply bg-cream text-ink antialiased;
 }
 
 /* Card sleeve effect */
 .card-sleeve {
-  @apply relative rounded-lg overflow-hidden;
+  @apply relative overflow-hidden border-2 border-ink;
   background: linear-gradient(
     135deg,
     rgba(255, 255, 255, 0.4) 0%,
@@ -31,16 +31,16 @@ body {
 
 /* Binder page background */
 .binder-page {
-  background-color: #f1f5f9;
+  @apply bg-binder-page border-4 border-ink;
 }
 
 /* Card hover effect */
 .card-hover {
-  @apply transition-all duration-200 ease-out;
+  @apply transition-transform duration-100 ease-out;
 }
 
 .card-hover:hover {
-  @apply -translate-y-1 shadow-lg;
+  @apply -translate-y-1 shadow-pixel;
 }
 
 /* Unavailable card overlay */
@@ -51,13 +51,14 @@ body {
 .card-unavailable::after {
   content: "SOLD";
   @apply absolute inset-0 flex items-center justify-center;
-  @apply bg-black/60 text-white font-bold text-lg;
+  @apply bg-ink/80 font-display text-danger text-[10px] tracking-wider;
   @apply rounded-lg;
 }
 
 /* Loading skeleton */
 .skeleton {
-  @apply animate-pulse bg-gray-200 rounded;
+  @apply animate-pulse rounded;
+  background-color: theme("colors.binder.border");
 }
 
 /* Custom scrollbar */
@@ -67,13 +68,15 @@ body {
 }
 
 ::-webkit-scrollbar-track {
-  @apply bg-gray-100 rounded;
+  @apply rounded;
+  background-color: theme("colors.cream");
 }
 
 ::-webkit-scrollbar-thumb {
-  @apply bg-gray-300 rounded;
+  @apply rounded;
+  background-color: theme("colors.binder.border");
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  @apply bg-gray-400;
+  background-color: theme("colors.ink");
 }

@@ -30,6 +30,7 @@ yarn-error.log*
 *.swp
 *.swo
 *~
+.claude
 
 # OS
 .DS_Store
@@ -42,6 +43,7 @@ coverage/
 # Prisma
 backend/prisma/migrations/
 backend/prisma/dev.db
+dev.db
 
 .kilo/
 

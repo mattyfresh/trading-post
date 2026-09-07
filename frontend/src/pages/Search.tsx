@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Link } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import { searchApi } from "../services/api";
-import { Search as SearchIcon, User, Folder } from "lucide-react";
+import { Search as SearchIcon, User, Folder } from "pixelarticons/react";
 import CardGrid from "../components/cards/CardGrid";
 
 type Tab = "cards" | "sellers";
@@ -47,13 +47,13 @@ export default function Search() {
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-      <h1 className="text-3xl font-bold text-gray-900 mb-8">Search</h1>
+      <h1 className="font-display text-lg sm:text-xl text-ink mb-8">Search</h1>
 
       {/* Tabs */}
-      <div className="flex border-b border-gray-200 mb-8">
+      <div className="flex border-b-4 border-ink mb-8">
         <button
           onClick={() => setTab("cards")}
-          className={`px-6 py-3 text-sm font-medium border-b-2 transition-colors ${
+          className={`px-6 py-3 text-sm font-bold uppercase tracking-wide border-b-4 -mb-1 transition-colors ${
             tab === "cards"
               ? "border-primary-600 text-primary-600"
               : "border-transparent text-gray-500 hover:text-gray-700"
@@ -63,7 +63,7 @@ export default function Search() {
         </button>
         <button
           onClick={() => setTab("sellers")}
-          className={`px-6 py-3 text-sm font-medium border-b-2 transition-colors ${
+          className={`px-6 py-3 text-sm font-bold uppercase tracking-wide border-b-4 -mb-1 transition-colors ${
             tab === "sellers"
               ? "border-primary-600 text-primary-600"
               : "border-transparent text-gray-500 hover:text-gray-700"
@@ -85,12 +85,12 @@ export default function Search() {
                   value={cardQuery}
                   onChange={e => setCardQuery(e.target.value)}
                   placeholder="Search for cards by name..."
-                  className="w-full pl-12 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+                  className="w-full pl-12 pr-4 py-3 border-2 border-ink focus:ring-2 focus:ring-primary-500 focus:border-transparent"
                 />
               </div>
               <button
                 type="submit"
-                className="px-6 py-3 bg-primary-600 text-white rounded-lg hover:bg-primary-700 transition-colors"
+                className="px-6 py-3 border-2 border-ink shadow-pixel-sm font-display text-[10px] tracking-wide bg-primary-600 text-white hover:bg-primary-700 active:shadow-none active:translate-x-1 active:translate-y-1 transition-colors"
               >
                 Search
               </button>
@@ -115,7 +115,7 @@ export default function Search() {
                   <button
                     onClick={() => setCardPage(p => Math.max(1, p - 1))}
                     disabled={cardPage === 1}
-                    className="px-4 py-2 border rounded-lg disabled:opacity-50"
+                    className="px-4 py-2 border-2 border-ink disabled:opacity-50"
                   >
                     Previous
                   </button>
@@ -125,7 +125,7 @@ export default function Search() {
                   <button
                     onClick={() => setCardPage(p => p + 1)}
                     disabled={cardPage >= cardData.pagination.totalPages}
-                    className="px-4 py-2 border rounded-lg disabled:opacity-50"
+                    className="px-4 py-2 border-2 border-ink disabled:opacity-50"
                   >
                     Next
                   </button>
@@ -156,12 +156,12 @@ export default function Search() {
                   value={sellerQuery}
                   onChange={e => setSellerQuery(e.target.value)}
                   placeholder="Search sellers by name..."
-                  className="w-full pl-12 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+                  className="w-full pl-12 pr-4 py-3 border-2 border-ink focus:ring-2 focus:ring-primary-500 focus:border-transparent"
                 />
               </div>
               <button
                 type="submit"
-                className="px-6 py-3 bg-primary-600 text-white rounded-lg hover:bg-primary-700 transition-colors"
+                className="px-6 py-3 border-2 border-ink shadow-pixel-sm font-display text-[10px] tracking-wide bg-primary-600 text-white hover:bg-primary-700 active:shadow-none active:translate-x-1 active:translate-y-1 transition-colors"
               >
                 Search
               </button>
@@ -188,7 +188,7 @@ export default function Search() {
                     <Link
                       key={seller.id}
                       to={`/seller/${seller.id}`}
-                      className="bg-white rounded-lg shadow-md p-6 hover:shadow-lg transition-shadow"
+                      className="bg-white border-2 border-ink shadow-pixel-sm p-6 hover:shadow-pixel transition-shadow"
                     >
                       <div className="flex items-center mb-4">
                         <div className="w-12 h-12 bg-gray-200 rounded-full flex items-center justify-center flex-shrink-0">
@@ -235,7 +235,7 @@ export default function Search() {
                   <button
                     onClick={() => setSellerPage(p => Math.max(1, p - 1))}
                     disabled={sellerPage === 1}
-                    className="px-4 py-2 border rounded-lg disabled:opacity-50"
+                    className="px-4 py-2 border-2 border-ink disabled:opacity-50"
                   >
                     Previous
                   </button>
@@ -245,7 +245,7 @@ export default function Search() {
                   <button
                     onClick={() => setSellerPage(p => p + 1)}
                     disabled={sellerPage >= sellerData.pagination.totalPages}
-                    className="px-4 py-2 border rounded-lg disabled:opacity-50"
+                    className="px-4 py-2 border-2 border-ink disabled:opacity-50"
                   >
                     Next
                   </button>

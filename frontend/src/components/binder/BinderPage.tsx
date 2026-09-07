@@ -30,10 +30,10 @@ export default function BinderPage({
         {cards.map(binderCard => (
           <div
             key={binderCard.id}
-            className={`aspect-card bg-white/60 rounded-lg border flex items-center justify-center overflow-hidden transition-all duration-300 ${
+            className={`aspect-card bg-white/60 border-2 flex items-center justify-center overflow-hidden transition-all duration-300 ${
               highlightedCardId === binderCard.id
                 ? "border-primary-500 ring-4 ring-primary-400/60 scale-105"
-                : "border-slate-300"
+                : "border-ink"
             }`}
           >
             <div
@@ -55,8 +55,10 @@ export default function BinderPage({
 
               {/* Unavailable overlay */}
               {!binderCard.isAvailable && (
-                <div className="absolute inset-0 bg-black/60 flex items-center justify-center rounded-md">
-                  <span className="text-white font-bold text-xs">SOLD</span>
+                <div className="absolute inset-0 bg-ink/80 flex items-center justify-center rounded-md">
+                  <span className="font-display text-white text-[8px] tracking-wider">
+                    SOLD
+                  </span>
                 </div>
               )}
 
@@ -92,10 +94,10 @@ export default function BinderPage({
                       ? "Click to mark as sold"
                       : "Click to mark as available"
                   }
-                  className={`absolute top-1 right-1 px-2 py-0.5 rounded text-xs font-medium transition-colors ${
+                  className={`absolute top-1 right-1 px-2 py-0.5 border-2 border-ink shadow-pixel-sm text-xs font-bold uppercase tracking-wide transition-colors active:shadow-none active:translate-x-1 active:translate-y-1 ${
                     binderCard.isAvailable
-                      ? "bg-green-500 text-white hover:bg-green-600"
-                      : "bg-gray-500 text-white hover:bg-gray-600"
+                      ? "bg-success text-white hover:bg-success-700"
+                      : "bg-ink/70 text-cream hover:bg-ink"
                   }`}
                 >
                   {binderCard.isAvailable ? "Available" : "Sold"}

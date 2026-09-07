@@ -1,7 +1,7 @@
 import { useParams, Link } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import { usersApi } from "../services/api";
-import { User, Folder, MessageCircle } from "lucide-react";
+import { User, Folder, Message } from "pixelarticons/react";
 import { useAuthStore } from "../store/authStore";
 
 export default function SellerProfile() {
@@ -50,10 +50,10 @@ export default function SellerProfile() {
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
       {/* Profile Header */}
-      <div className="bg-white rounded-lg shadow-md p-6 mb-8">
+      <div className="bg-white border-2 border-ink shadow-pixel-sm p-6 mb-8">
         <div className="flex items-center justify-between">
           <div className="flex items-center">
-            <div className="w-16 h-16 bg-gray-200 rounded-full flex items-center justify-center">
+            <div className="w-16 h-16 bg-gray-200 rounded-full border-2 border-ink flex items-center justify-center overflow-hidden">
               {user.avatarUrl ? (
                 <img
                   src={user.avatarUrl}
@@ -65,7 +65,7 @@ export default function SellerProfile() {
               )}
             </div>
             <div className="ml-4">
-              <h1 className="text-2xl font-bold text-gray-900">
+              <h1 className="font-bold text-2xl text-ink">
                 {user.displayName}
               </h1>
               <p className="text-gray-500">
@@ -76,9 +76,9 @@ export default function SellerProfile() {
           {currentUser && currentUser.id !== id && (
             <Link
               to={`/messages?seller=${id}`}
-              className="flex items-center px-4 py-2 bg-primary-600 text-white rounded-lg hover:bg-primary-700"
+              className="flex items-center px-4 py-2 border-2 border-ink shadow-pixel-sm font-display text-[10px] tracking-wide bg-primary-600 text-white hover:bg-primary-700 active:shadow-none active:translate-x-1 active:translate-y-1"
             >
-              <MessageCircle className="w-5 h-5 mr-2" />
+              <Message className="w-5 h-5 mr-2" />
               Contact
             </Link>
           )}
@@ -86,14 +86,16 @@ export default function SellerProfile() {
       </div>
 
       {/* Binders */}
-      <h2 className="text-xl font-bold text-gray-900 mb-4">Trade Binders</h2>
+      <h2 className="font-display text-base sm:text-lg text-ink mb-4">
+        Trade Binders
+      </h2>
       {binders && binders.length > 0 ? (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {binders.map(binder => (
             <Link
               key={binder.id}
               to={`/binder/${binder.id}`}
-              className="bg-white rounded-lg shadow-md p-6 hover:shadow-lg transition-shadow"
+              className="bg-white border-2 border-ink shadow-pixel-sm p-6 hover:shadow-pixel transition-shadow"
             >
               <div className="flex items-center">
                 <Folder className="w-8 h-8 text-primary-600 mr-3" />

@@ -37,7 +37,7 @@ export default function CardGrid({
         >
           {/* Card Image */}
           <div
-            className="aspect-card rounded-lg overflow-hidden bg-gray-200 card-hover cursor-pointer card-sleeve"
+            className="aspect-card overflow-hidden bg-gray-200 card-hover cursor-pointer card-sleeve border-2 border-ink shadow-pixel-sm"
             onClick={() => handleCardClick(binderCard)}
           >
             <img
@@ -49,8 +49,10 @@ export default function CardGrid({
 
             {/* Unavailable overlay */}
             {!binderCard.isAvailable && (
-              <div className="absolute inset-0 bg-black/60 flex items-center justify-center">
-                <span className="text-white font-bold text-sm">SOLD</span>
+              <div className="absolute inset-0 bg-ink/80 flex items-center justify-center">
+                <span className="font-display text-white text-[10px] tracking-wider">
+                  SOLD
+                </span>
               </div>
             )}
 
