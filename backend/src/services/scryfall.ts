@@ -120,7 +120,7 @@ export async function getCardById(
     throw new Error(`Scryfall API error: ${response.status}`);
   }
 
-  return response.json();
+  return response.json() as Promise<ScryfallCard>;
 }
 
 // Autocomplete card names (for search suggestions)

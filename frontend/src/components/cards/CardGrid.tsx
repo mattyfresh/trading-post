@@ -1,6 +1,7 @@
 import { Link, useNavigate } from "react-router-dom";
 import type { BinderCard } from "../../types";
 import { CONDITION_LABELS } from "../../types";
+import { useAuthStore } from "../../store/authStore";
 
 interface CardGridProps {
   cards: BinderCard[];
@@ -22,6 +23,8 @@ export default function CardGrid({
       navigate(`/binder/${binderCard.binderId}?highlight=${binderCard.id}`);
     }
   };
+
+  const { user: currentUser } = useAuthStore();
 
   return (
     <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4">
@@ -85,7 +88,7 @@ export default function CardGrid({
                 to={`/seller/${binderCard.binder.user.id}`}
                 className="text-xs text-gray-500 hover:text-primary-600 mt-1 block"
               >
-                by {binderCard.binder.user.displayName}
+                by {binderCard.binder.user.displayName} {binderCard.binder.userId === currentUser?.id ? "(You)" : ""}
               </Link>
             )}
           </div>
