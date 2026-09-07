@@ -19,7 +19,7 @@ export default function BinderPage({
   onToggleAvailability,
 }: BinderPageProps) {
   return (
-    <div className="binder-page rounded-lg p-4 shadow-inner">
+    <div>
       {/* Page number */}
       <div className="text-center text-sm text-slate-400 mb-2">
         Page {pageNumber}
