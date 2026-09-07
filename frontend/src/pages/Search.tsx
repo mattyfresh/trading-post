@@ -98,10 +98,9 @@ export default function Search() {
 
           {/* Card Results */}
           {cardsLoading ? (
-            <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4">
-              {[...Array(12)].map((_, i) => (
-                <div key={i} className="aspect-card skeleton rounded-lg" />
-              ))}
+            <div className="text-center py-12 text-gray-500">
+              <SearchIcon className="w-16 h-16 mx-auto mb-4 text-gray-300" />
+              <p>Searching...</p>
             </div>
           ) : cardData?.cards && cardData.cards.length > 0 ? (
             <>
