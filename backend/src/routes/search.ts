@@ -1,10 +1,11 @@
-import { Router, Request, Response } from "express";
+import { Router, Response } from "express";
 import { prisma } from "../index.js";
+import { AuthRequest, optionalAuth } from "../middleware/auth.js";
 
 const router = Router();
 
 // GET /api/search/cards - Search all available cards across sellers
-router.get("/cards", async (req: Request, res: Response) => {
+router.get("/cards", optionalAuth, async (req: AuthRequest, res: Response) => {
   try {
     const {
       q, // Card name search
@@ -64,6 +65,13 @@ router.get("/cards", async (req: Request, res: Response) => {
       where.condition = condition.toUpperCase();
     }
 
+    // Filter out my own cards (if the requester is logged in)
+    if (req.userId) {
+      where.binder.userId = {
+        not: req.userId,
+      };
+    }
+
     // Get total count
     const total = await prisma.binderCard.count({ where });
 
@@ -105,7 +113,7 @@ router.get("/cards", async (req: Request, res: Response) => {
 });
 
 // GET /api/search/sellers - Search sellers
-router.get("/sellers", async (req: Request, res: Response) => {
+router.get("/sellers", async (req: AuthRequest, res: Response) => {
   try {
     const { q, page = "1", limit = "20" } = req.query;
 
@@ -185,7 +193,7 @@ router.get("/sellers", async (req: Request, res: Response) => {
 });
 
 // GET /api/search/featured - Get featured/recent listings
-router.get("/featured", async (req: Request, res: Response) => {
+router.get("/featured", async (req: AuthRequest, res: Response) => {
   try {
     const recentCards = await prisma.binderCard.findMany({
       where: {

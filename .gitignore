@@ -43,7 +43,6 @@ coverage/
 # Prisma
 backend/prisma/migrations/
 backend/prisma/dev.db
-dev.db
 
 .kilo/
 
