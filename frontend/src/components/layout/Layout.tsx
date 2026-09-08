@@ -1,12 +1,41 @@
 import { Outlet, Link, useNavigate } from "react-router-dom";
 import { useAuthStore } from "../../store/authStore";
 import { Search, Message, Folder, User, Logout, Menu, X } from "pixelarticons/react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { conversationsApi } from "../../services/api";
+import { socket } from "../../services/socket";
 
 export default function Layout() {
   const { user, isAuthenticated, logout } = useAuthStore();
   const navigate = useNavigate();
+  const queryClient = useQueryClient();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+
+  const { data: unreadCount = 0 } = useQuery({
+    queryKey: ["unreadCount"],
+    queryFn: conversationsApi.getUnreadCount,
+    enabled: isAuthenticated,
+  });
+
+  // Global listener so unread state updates no matter which page is open,
+  // and re-syncs on (re)connect in case any messages arrived while offline.
+  useEffect(() => {
+    if (!isAuthenticated) return;
+
+    const refresh = () => {
+      queryClient.invalidateQueries({ queryKey: ["unreadCount"] });
+      queryClient.invalidateQueries({ queryKey: ["conversations"] });
+    };
+
+    socket.on("new_message", refresh);
+    socket.on("connect", refresh);
+
+    return () => {
+      socket.off("new_message", refresh);
+      socket.off("connect", refresh);
+    };
+  }, [isAuthenticated, queryClient]);
 
   const handleLogout = () => {
     logout();
@@ -48,10 +77,15 @@ export default function Layout() {
                   </Link>
                   <Link
                     to="/messages"
-                    className="flex items-center space-x-1 font-bold uppercase tracking-wide text-xs text-ink hover:text-primary-600 transition-colors"
+                    className="flex items-center space-x-1 font-bold uppercase tracking-wide text-xs text-ink hover:text-primary-600 transition-colors relative"
                   >
                     <Message className="w-5 h-5" />
                     <span>Messages</span>
+                    {unreadCount > 0 && (
+                      <span className="bg-primary-600 text-white text-[10px] leading-none px-1.5 py-1 rounded-full min-w-[1.1rem] text-center">
+                        {unreadCount}
+                      </span>
+                    )}
                   </Link>
                   <div className="flex items-center space-x-4">
                     <Link
@@ -131,6 +165,11 @@ export default function Layout() {
                   >
                     <Message className="w-5 h-5" />
                     <span>Messages</span>
+                    {unreadCount > 0 && (
+                      <span className="bg-primary-600 text-white text-[10px] leading-none px-1.5 py-1 rounded-full min-w-[1.1rem] text-center">
+                        {unreadCount}
+                      </span>
+                    )}
                   </Link>
                   <button
                     onClick={() => {

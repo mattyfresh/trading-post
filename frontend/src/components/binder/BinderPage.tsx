@@ -25,6 +25,11 @@ export default function BinderPage({
 
       {/* Card grid — only filled slots */}
       <div className="grid grid-cols-3 gap-3">
+        {!cards.length && (
+          <div className="col-span-3 font-display text-center text-gray-500 py-12">
+            No cards yet, sad!
+          </div>
+        )}
         {cards.map((binderCard) => (
           <div
             key={binderCard.id}
