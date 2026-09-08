@@ -253,16 +253,9 @@ router.get("/:id", authenticateToken, async (req: AuthRequest, res: Response) =>
       return;
     }
 
-    // Mark messages as read
-    await prisma.message.updateMany({
-      where: {
-        conversationId: id,
-        senderId: { not: req.userId },
-        isRead: false,
-      },
-      data: { isRead: true },
-    });
-
+    // Note: this is a read-only fetch — marking messages read is handled
+    // explicitly by the frontend via PATCH /:id/read once the user has
+    // actually seen this conversation, not as a side effect of loading it.
     res.json({ conversation });
   } catch (error) {
     console.error("Get conversation error:", error);

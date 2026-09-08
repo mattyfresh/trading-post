@@ -125,7 +125,7 @@ export default function AddCardModal({ isPending, onAdd, onClose }: AddCardModal
               <div
                 key={card.scryfallId}
                 onClick={() => handleSelectCard(card)}
-                className="cursor-pointer hover:ring-2 hover:ring-primary-500 rounded-lg overflow-hidden"
+                className="cursor-pointer hover:ring-2 hover:ring-primary-500 rounded-[12px] overflow-hidden"
               >
                 <img src={card.imageUrl} alt={card.name} className="w-full aspect-card object-cover" />
               </div>
@@ -151,7 +151,11 @@ export default function AddCardModal({ isPending, onAdd, onClose }: AddCardModal
             }}
           >
             <div className="flex space-x-4 mb-4">
-              <img src={activePrinting.imageUrl} alt={activePrinting.name} className="w-48 rounded-lg object-contain" />
+              <img
+                src={activePrinting.imageUrl}
+                alt={activePrinting.name}
+                className="w-48 rounded-[12px] object-contain"
+              />
               <div className="flex-1 space-y-3">
                 <h3 className="font-semibold">{selectedCard.name}</h3>
 

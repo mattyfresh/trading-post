@@ -96,7 +96,7 @@ export default function Home() {
           {isLoading ? (
             <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4">
               {[...Array(6)].map((_, i) => (
-                <div key={i} className="aspect-card skeleton rounded-lg" />
+                <div key={i} className="aspect-card skeleton rounded-[12px]" />
               ))}
             </div>
           ) : featured && featured.length > 0 ? (

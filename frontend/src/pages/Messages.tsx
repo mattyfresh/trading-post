@@ -31,9 +31,13 @@ export default function Messages() {
     queryKey: ["conversation", selectedConversation],
     queryFn: async () => {
       const conv = await conversationsApi.getConversation(selectedConversation!);
-      // The GET endpoint marks messages as read server-side, so refresh the
-      // conversation list to clear the unread badge.
+      // The user is looking at this conversation right now, so mark it read —
+      // this query re-runs both when they open it and, via the new_message
+      // socket handler below, whenever a message arrives while it's still
+      // the one they have open.
+      await conversationsApi.markAsRead(selectedConversation!);
       queryClient.invalidateQueries({ queryKey: ["conversations"] });
+      queryClient.invalidateQueries({ queryKey: ["unreadCount"] });
       return conv;
     },
     enabled: !!selectedConversation,
@@ -73,10 +77,14 @@ export default function Messages() {
     setSelectedConversation(conversations[0].id);
   }
 
-  // If the seller param arrives and we already have a conversation with them, select it.
-  if (sellerParam && conversations) {
+  // If the seller param arrives and we already have a conversation with them, select it
+  // once — tracked in state so it doesn't keep re-forcing the selection (and overriding
+  // manual clicks in the conversation list) on every render while ?seller= stays in the URL.
+  const [handledSellerParam, setHandledSellerParam] = useState<string | null>(null);
+  if (sellerParam && conversations && handledSellerParam !== sellerParam) {
     const existing = conversations.find((c) => c.sellerId === sellerParam || c.buyerId === sellerParam);
-    if (existing && (composingSellerId !== null || selectedConversation !== existing.id)) {
+    if (existing) {
+      setHandledSellerParam(sellerParam);
       setComposingSellerId(null);
       setSelectedConversation(existing.id);
     }
@@ -95,7 +103,9 @@ export default function Messages() {
   // Listen for real-time messages via socket
   useEffect(() => {
     const handler = ({ conversationId }: { conversationId: string; message: Message }) => {
-      // Refresh the active thread if it's the one receiving a message
+      // If this is the conversation currently open, refetching it re-marks it
+      // read (see the queryFn above) — invalidating an inactive key is a no-op,
+      // so a message landing elsewhere won't touch read state until it's opened.
       queryClient.invalidateQueries({
         queryKey: ["conversation", conversationId],
       });

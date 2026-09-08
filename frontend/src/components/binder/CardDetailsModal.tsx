@@ -39,7 +39,11 @@ export default function CardDetailsModal({
         </div>
 
         <div className="flex space-x-4">
-          <img src={card.card.imageUrl} alt={card.card.name} className="w-56 rounded-lg object-contain flex-shrink-0" />
+          <img
+            src={card.card.imageUrl}
+            alt={card.card.name}
+            className="w-56 rounded-[12px] object-contain flex-shrink-0"
+          />
           <div className="flex-1 space-y-3 text-sm">
             {/* Set */}
             <div>

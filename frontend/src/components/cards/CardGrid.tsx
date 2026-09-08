@@ -28,7 +28,7 @@ export default function CardGrid({ cards, showSeller = true, onCardClick }: Card
         <div key={binderCard.id} className={`group relative ${!binderCard.isAvailable ? "opacity-60" : ""}`}>
           {/* Card Image */}
           <div
-            className="aspect-card overflow-hidden bg-gray-200 card-hover cursor-pointer card-sleeve border-2 border-ink shadow-pixel-sm"
+            className="aspect-card bg-gray-200 card-hover cursor-pointer card-sleeve border-2 border-ink shadow-pixel-sm rounded-[12px]"
             onClick={() => handleCardClick(binderCard)}
           >
             <img

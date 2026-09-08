@@ -33,34 +33,33 @@ export default function BinderPage({
         {cards.map((binderCard) => (
           <div
             key={binderCard.id}
-            className={`aspect-card bg-white/60 border-2 flex items-center justify-center overflow-hidden transition-all duration-300 ${
+            className={`aspect-card bg-white/60 flex items-center justify-center transition-all duration-300 ${
               highlightedCardId === binderCard.id
                 ? "border-primary-500 ring-4 ring-primary-400/60 scale-105"
-                : "border-ink"
+                : ""
             }`}
           >
-            <div className={`relative w-full h-full group ${!binderCard.isAvailable ? "opacity-60" : ""}`}>
+            <div
+              className={`relative w-full h-full group cursor-pointer card-hover card-sleeve rounded-[12px] ${!binderCard.isAvailable ? "opacity-60" : ""}`}
+            >
               {/* Card Image */}
               <img
                 src={binderCard.card.imageUrl}
                 alt={binderCard.card.name}
-                className="w-full h-full object-cover rounded-md cursor-pointer card-hover"
+                className="w-full h-full object-cover rounded-[12px]"
                 onClick={() => onCardClick?.(binderCard)}
                 loading="lazy"
               />
 
-              {/* Card sleeve overlay */}
-              <div className="absolute inset-0 card-sleeve pointer-events-none rounded-md" />
-
               {/* Unavailable overlay */}
               {!binderCard.isAvailable && (
-                <div className="absolute inset-0 bg-ink/80 flex items-center justify-center rounded-md">
+                <div className="absolute inset-0 bg-ink/80 flex items-center justify-center rounded-[12px]">
                   <span className="font-display text-white text-[8px] tracking-wider">SOLD</span>
                 </div>
               )}
 
               {/* Hover info */}
-              <div className="absolute inset-x-0 bottom-0 p-2 bg-gradient-to-t from-black to-black/40 opacity-0 group-hover:opacity-100 transition-opacity rounded-b-md">
+              <div className="absolute inset-x-0 bottom-0 p-2 bg-gradient-to-t from-black to-black/40 opacity-0 group-hover:opacity-100 transition-opacity rounded-b-[12px]">
                 <p className="text-white text-xs font-medium truncate">{binderCard.card.name}</p>
                 <p className="text-white/60 text-xs truncate">{binderCard.card.setName}</p>
                 <div className="flex justify-between items-center mt-1">
